@@ -6,8 +6,9 @@ namespace MIIO.Models
     public class Order
     {
         //Id, Description, TotalAmount, Date, State
-        public Order (int id, string description, int totalAmount, DateTime date, string state) { 
+        public Order (int id,  string userId, string description, int totalAmount, DateTime date, string state) { 
             Id = id;
+            UserId = userId;
             Description = description;
             TotalAmount = totalAmount;
             Date = date;
@@ -15,6 +16,8 @@ namespace MIIO.Models
         }
 
         public int Id { get; set; }
+        [Required]
+        public string UserId { get; set; }
         [Required]
         public string Description { get; set; }
         [Required]
