@@ -37,19 +37,7 @@ namespace MIIO.Areas.Orders.Controllers
             }
             return View(orderFromDb);
         }
-        [HttpPost]
-        public IActionResult Details(Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Order.Update(order);
-                _unitOfWork.Save();
-                 TempData["success"] = "Pedido editado correctamente";
-                return RedirectToAction("Index");
-            }
-            TempData["error"] = "No se ha podido editar el pedido";
-            return View();
-        }
+        
         #region API
         public async Task<IActionResult> GetAll(DateTime? startDate, DateTime? endDate)
         {
