@@ -23,6 +23,9 @@
     <Folder Include="Areas\Orders\Data\" />
     <Folder Include="Areas\Orders\Models\" />
     <Folder Include="Areas\Orders\Views\" />
+    <Folder Include="Areas\Products\Data\" />
+    <Folder Include="Areas\Products\Models\" />
+    <Folder Include="Areas\Products\Views\" />
     <Folder Include="Areas\User\Controllers\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Areas\User\Models\" />

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MIIO.Data.Repository.Interfaces;
 using MIIO.Models;
@@ -8,12 +7,12 @@ namespace MIIO.Areas.Orders.Controllers
 {
     //[Area("Orders")]
     //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
-    public class OrderController : Controller
+    public class AdminOrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
 
-        public OrderController(IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public AdminOrderController(IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -23,8 +22,7 @@ namespace MIIO.Areas.Orders.Controllers
         {
             return View();
         }
-
-        public IActionResult Details(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
             {
@@ -38,13 +36,13 @@ namespace MIIO.Areas.Orders.Controllers
             return View(orderFromDb);
         }
         [HttpPost]
-        public IActionResult Details(Order order)
+        public IActionResult Edit(Order order)
         {
             if (ModelState.IsValid)
             {
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
-                 TempData["success"] = "Pedido editado correctamente";
+                TempData["success"] = "Pedido editado correctamente";
                 return RedirectToAction("Index");
             }
             TempData["error"] = "No se ha podido editar el pedido";
@@ -56,7 +54,7 @@ namespace MIIO.Areas.Orders.Controllers
             var orderList = await _unitOfWork.Order.GetAllAsync();
             if (startDate.HasValue)
                 orderList = orderList.Where(o => o.Date >= startDate.Value).ToList();
-            
+
             if (endDate.HasValue)
                 orderList = orderList.Where(o => o.Date <= endDate.Value).ToList();
 
@@ -73,6 +71,9 @@ namespace MIIO.Areas.Orders.Controllers
                     order.TotalAmount,
                     order.Date,
                     order.State,
+                    DeliveryBy = user?.Name != null && user?.LastName != null
+                                    ? user.Name + " " + user.LastName
+                                    : "Desconocido",
                     UserName = user?.UserName ?? "Desconocido"
                 });
             }
