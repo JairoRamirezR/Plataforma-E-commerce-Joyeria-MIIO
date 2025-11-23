@@ -1,17 +1,43 @@
-﻿@{
+﻿@model IEnumerable<MIIO.Models.Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <!-- Featured Image -->
-<div class="hero-section">
-    <h3>IMAGEN</h3>
-    <p>Espacio destinado para una imagen que cuente la historia de Miio, resaltando la elegancia y calidad de nuestras piezas de plata</p>
-</div>
+    <div class="hero-section">
+        <h3>IMAGEN</h3>
+        <p>Espacio destinado para una imagen que cuente la historia de Miio, resaltando la elegancia y calidad de nuestras piezas de plata</p>
+    </div>
 
-<!-- Featured Products -->
-<div class="product-gallery-container">
-    <h2>Nuestros Productos Destacados</h2>
-  
+    <div class="product-gallery-container mt-4 mb-5">
+        <h2 class="text-center">Nuestros Productos Destacados</h2>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning text-center" role="alert">
+                No se encontraron productos que coincidan con su búsqueda.
+            </div>
+        }
+
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100">
+                        <img src="~/images/@product.Image" class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-muted">@product.Description</p>
+                            <p class="card-text mt-auto">
+                                <strong>Precio:</strong>
+                                <span class="text-success">@product.Price.ToString("C")</span>
+                            </p>
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary mt-2">Ver Detalle</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
