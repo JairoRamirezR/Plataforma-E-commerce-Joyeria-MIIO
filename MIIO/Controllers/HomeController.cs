@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using MIIO.Data.Repository.Interfaces; // Asegúrate de agregar este using
 using MIIO.Models;
 
 namespace MIIO.Controllers
@@ -7,15 +8,24 @@ namespace MIIO.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _unitOfWork; // Declarar la interfaz para acceso a datos
 
-        public HomeController(ILogger<HomeController> logger)
+        // Constructor modificado para inyectar IUnitOfWork
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork; // Asignar la inyección
         }
 
         public IActionResult Index()
         {
-            return View();
+            // Obtener todos los productos de la base de datos
+            // La función GetAll puede necesitar ajustes (ej: .ToList() o .AsEnumerable())
+            // dependiendo de tu implementación de IUnitOfWork y el repositorio.
+            var productList = _unitOfWork.Product.GetAll();
+
+            // Pasar la lista de productos a la vista
+            return View(productList);
         }
 
         public IActionResult Privacy()
@@ -30,3 +40,5 @@ namespace MIIO.Controllers
         }
     }
 }
+
+

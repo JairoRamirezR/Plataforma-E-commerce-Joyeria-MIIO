@@ -9,6 +9,28 @@
     <link rel="stylesheet" href="~/MIIO.styles.css" asp-append-version="true" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link rel="stylesheet" href="//cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css" />
+
+    <style>
+        /* 1. HTML debe ocupar el 100% de la altura y ser el punto de referencia */
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        /* 2. BODY debe dejar un margen inferior equivalente a la altura del footer */
+        body {
+            margin-bottom: 60px;
+        }
+
+        /* 3. Definir la posición del footer */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+        }
+    </style>
 </head>
 <body>
     <header>
