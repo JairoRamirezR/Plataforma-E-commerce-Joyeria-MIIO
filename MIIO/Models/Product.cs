@@ -4,6 +4,8 @@ namespace MIIO.Models
 {
     public class Product
     {
+        public Product() { }
+
         // Id, Name, Material, Category, Price, Offer, Image, Description
         public Product(int id, string name, string description, string category
             , string material, string image, int price, Boolean offer) { 
