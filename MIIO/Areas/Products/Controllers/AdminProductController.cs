@@ -5,7 +5,7 @@ using MIIO.Models;
 
 namespace MIIO.Areas.Products.Controllers
 {
-    //[Area("Products")]
+    [Area("Products")]
     //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
     public class AdminProductController : Controller
     {
@@ -131,7 +131,7 @@ namespace MIIO.Areas.Products.Controllers
             }
             _unitOfWork.Product.Remove(productToDelete);
             _unitOfWork.Save();
-            return Json(new { success = true, message = "Plato Eliminado Correctamente" });
+            return Json(new { success = true, message = "Producto Eliminado Correctamente" });
         }
         #endregion
     }

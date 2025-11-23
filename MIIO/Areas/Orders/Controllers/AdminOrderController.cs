@@ -10,9 +10,9 @@ namespace MIIO.Areas.Orders.Controllers
     public class AdminOrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminOrderController(IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public AdminOrderController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;

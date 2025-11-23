@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MIIO.Models
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         //Id, Name, LastName, Email, BirthDay, Address, Password
         [Required]
