@@ -1,0 +1,122 @@
+﻿@model MIIO.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<style>
+    .product-page {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-top: 40px;
+    }
+
+    .gallery-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .gallery-thumbnails {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+        .gallery-thumbnails button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 8px;
+            text-align: left;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    .main-image {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border: 1px solid #ccc;
+        object-fit: contain;
+    }
+
+    .info-section {
+        flex: 1;
+        min-width: 300px;
+    }
+
+        .info-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .info-section .price {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-section .offer {
+            font-size: 1rem;
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .info-section .short-description {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .info-section .add-to-cart {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    .specs {
+        margin-top: 30px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+        .specs ul {
+            padding-left: 20px;
+        }
+</style>
+
+<div class="product-page">
+    <!-- Galería -->
+    <div class="gallery-section">
+        <img src=@Model.Image alt="Imagen principal de @Model.Name" class="main-image" />
+    </div>
+
+    <!-- Información -->
+    <div class="info-section">
+        <h2>@Model.Name</h2>
+        <div class="price">₡@Model.Price</div>
+        @if (Model.Offer)
+        {
+            <div class="offer">¡En oferta!</div>
+        }
+        <div class="short-description">@Model.Description</div>
+        <button class="add-to-cart">Agregar al carrito</button>
+
+        <div class="specs">
+            <h4>Descripción</h4>
+            <p>Este hermoso producto ha sido diseñado con los más altos estándares de calidad. Cada detalle ha sido cuidadosamente elaborado para garantizar elegancia y durabilidad. Perfecto para cualquier ocasión, este artículo complementará tu estilo personal.</p>
+            <ul>
+                <li><strong>Categoría:</strong> @Model.Category</li>
+                <li><strong>Material:</strong> @Model.Material</li>
+                <li><strong>Color:</strong> Variable</li>
+                <li><strong>Dimensiones:</strong> Estándar</li>
+                <li><strong>Acabado:</strong> Pulido</li>
+                <li><strong>Tipo de cierre:</strong> Estándar</li>
+            </ul>
+        </div>
+    </div>
+</div>

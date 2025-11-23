@@ -5,7 +5,7 @@ using MIIO.Models;
 
 namespace MIIO.Areas.Orders.Controllers
 {
-    //[Area("Orders")]
+    [Area("Orders")]
     //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
     public class AdminOrderController : Controller
     {

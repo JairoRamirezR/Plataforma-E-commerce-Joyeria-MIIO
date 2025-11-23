@@ -6,7 +6,7 @@ using NuGet.Packaging.Rules;
 
 namespace MIIO.Areas.Products.Controllers
 {
-    //[Area("Products")]
+    [Area("Products")]
     //[Authorize(Roles = Utilities.StaticValues.Role_Client)]
     public class ProductController : Controller
     {

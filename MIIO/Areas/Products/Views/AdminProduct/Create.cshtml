@@ -1,0 +1,96 @@
+﻿@model MIIO.Models.Product
+
+@{
+    ViewData["Title"] = "Crear Nuevo Producto";
+}
+
+<div class="main-content">
+    <section class="edit-product-section">
+        <h1 class="page-title">Crear Producto</h1>
+        <p class="page-subtitle">Ingresa la información del nuevo producto</p>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+            @* Sección: Información Básica *@
+            <div class="card basic-info">
+                <h2 class="card-title">Información Básica</h2>
+
+                <div class="form-group">
+                    <label asp-for="Name">Nombre del Producto</label>
+                    <input asp-for="Name" placeholder="Nombre del Producto" class="input-full" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group">
+                    <label asp-for="Description">Descripción Breve</label>
+                    <input asp-for="Description" placeholder="Descripción breve del producto" class="input-full" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>*@
+
+                <div class="form-row">
+                    <div class="form-group-half">
+                        <label asp-for="Price">Precio (CRC)</label>
+                        <input asp-for="Price" type="number" class="input-half" value="0" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group-half">
+                        <label asp-for="Category">Categoría</label>
+                        <input asp-for="Category" class="input-half" placeholder="Anillo, Collar, etc." />
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* Sección: Detalles del Producto *@
+            <div class="card product-details">
+                <h2 class="card-title">Detalles del Producto</h2>
+
+                <div class="details-grid">
+                    <div class="form-group-half">
+                        <label asp-for="Material">Material</label>
+                        <input asp-for="Material" class="input-half" placeholder="Plata 925, Oro, etc." />
+                        <span asp-validation-for="Material" class="text-danger"></span>
+                    </div>
+                    <div class="form-group-half">
+                        <label asp-for="Offer">Oferta (Sí/No)</label>
+                        <input asp-for="Offer" type="checkbox" />
+                        <span asp-validation-for="Offer" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group full-description-group">
+                    <label>Descripción Completa</label>
+                    <textarea asp-for="Description" class="full-description-textarea" placeholder="Descripción detallada del producto"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            @* Sección: Imágenes del Producto *@
+            <div class="card product-images">
+                <h2 class="card-title">Imágenes del Producto</h2>
+                <div class="image-upload-area">
+                    @* Campo de subida de archivos requerido (para guardar en la propiedad Image) *@
+                    <input type="file" name="file" class="d-none" id="file-upload-input" />
+
+                    <div class="image-box upload-placeholder" onclick="document.getElementById('file-upload-input').click()">
+                        <span class="upload-icon">↑</span>
+                        <span>Agregar</span>
+                    </div>
+                </div>
+                <p class="image-upload-note">Puedes agregar hasta 5 imágenes. La primera imagen será la principal.</p>
+            </div>
+
+            @* Botones de Acción *@
+            <div class="action-buttons">
+                <a asp-action="Index" class="btn btn-cancel">Cancelar</a>
+                <button type="submit" class="btn btn-save">Crear Producto</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
