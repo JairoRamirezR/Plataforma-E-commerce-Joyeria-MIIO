@@ -34,9 +34,14 @@ namespace MIIO.Data.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
             if (includeProperties != null)
             {
                 foreach (var p in includeProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
@@ -44,6 +49,7 @@ namespace MIIO.Data.Repository
                     query = query.Include(p);
                 }
             }
+            
             return query.ToList();
         }
 

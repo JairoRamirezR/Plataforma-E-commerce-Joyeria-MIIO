@@ -33,10 +33,11 @@
 
         <!-- Search Bar + Shopping cart-->
         <div class="search-cart-container">
-            <div class="search-box">
+            <form method="get" asp-area="Products" asp-controller="Search" asp-action="Results" class="search-box">
                 <span class="search-icon fa fa-search" aria-hidden="true"></span>
-                <input type="text" placeholder="Buscar joyas..." class="search-input">
-            </div>
+                <input type="text" name="query" placeholder="Buscar joyas..." class="search-input" />
+            </form>
+
             <a asp-page="/Carrito" class="cart-button">
                 <span class="fa-solid fa-cart-shopping" style="margin-right: 5px;"></span>
                 Carrito
