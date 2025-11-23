@@ -1,5 +1,4 @@
-
-body {
+﻿body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -7,13 +6,11 @@ body {
     color: #333;
 }
 
-
-
 /* HEADER */
 .top-bar {
     padding: 10px 20px;
     text-align: right;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
 }
 
     .top-bar a {
@@ -30,7 +27,7 @@ body {
 /* LOGO */
 .logo-container {
     text-align: center;
-    padding: 40px 0 30px; 
+    padding: 40px 0 30px;
 }
 
 .logo-img {
@@ -108,7 +105,7 @@ body {
 .category-menu {
     text-align: center;
     padding: 15px 0;
-    border-bottom: 1px dashed #ccc; 
+    border-bottom: 1px dashed #ccc;
 }
 
     .category-menu a {
@@ -146,7 +143,7 @@ body {
         line-height: 1.5;
     }
 
-/* GALER�A DE PRODUCTOS (CSS Grid) */
+/* GALERÍA DE PRODUCTOS (CSS Grid) */
 .product-gallery-container {
     padding: 30px 20px;
     text-align: center;
@@ -160,11 +157,11 @@ body {
 
 .product-grid {
     display: grid;
-    /* Define 4 columnas que se ajustan autom�ticamente */
+    /* Define 4 columnas que se ajustan automáticamente */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px; /* Espacio entre las tarjetas */
     max-width: 1200px;
-    margin: 0 auto; /* Centrar la cuadr�cula */
+    margin: 0 auto; /* Centrar la cuadrícula */
 }
 
 /* ------------------------------------- */
@@ -233,9 +230,9 @@ body {
         background-color: #555;
     }
 
-/* �conos simulados (usar Font Awesome o similar en proyecto real) */
+/* Íconos simulados (usar Font Awesome o similar en proyecto real) */
 .material-icons {
-    font-family: 'Material Icons'; /* Asumimos una fuente de �conos */
+    font-family: 'Material Icons'; /* Asumimos una fuente de íconos */
     font-size: 18px;
     vertical-align: middle;
     margin-left: 5px;
@@ -252,5 +249,202 @@ body {
 @media (max-width: 500px) {
     .product-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+
+/* ------------------------------------- */
+/* ⭐ ESTILOS AÑADIDOS PARA VISTAS DE ADMINISTRACIÓN (EDITAR/CREAR PRODUCTO) ⭐ */
+/* ------------------------------------- */
+
+.main-content {
+    /* Define el área central para las vistas de edición, similar a la maqueta */
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Estilos para las tarjetas de información (Información Básica, Detalles, Imágenes) */
+.card {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra ligera para destacar */
+    border: 1px solid #e0e0e0;
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: 600; /* Coherente con otros títulos */
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* Estilos de Formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        font-size: 0.9em;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold; /* Etiquetas en negrita */
+    }
+
+.input-full, .input-half, .full-description-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluye padding en el ancho/alto total */
+    background-color: #f9f9f9; /* Fondo gris claro en el input/textarea */
+    font-size: 14px;
+    color: #333;
+}
+
+.full-description-textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Disposición de la fila de Precio y SKU/Categoría */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group-half {
+    flex: 1;
+}
+
+/* Cuadrícula de Detalles (usada en la segunda tarjeta) */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 30px;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de Subida de Imágenes */
+.image-upload-area {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap; /* Para que las imágenes se ajusten */
+    margin-bottom: 10px;
+}
+
+.image-box {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+    color: #999;
+}
+
+.upload-placeholder {
+    background-color: #fff;
+    border: 2px dashed #ccc; /* Borde punteado para indicar subida */
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+    .upload-placeholder:hover {
+        border-color: #333;
+    }
+
+.upload-icon {
+    font-size: 2em;
+    line-height: 1;
+    color: #666;
+}
+
+.image-upload-note {
+    font-size: 0.8em;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* Botones de Acción (Guardar/Cancelar) */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end; /* Alinea a la derecha como en la maqueta */
+    gap: 10px;
+    padding: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1em;
+    text-decoration: none; /* Asegurar que los a.btn se vean como botones */
+    transition: opacity 0.2s;
+}
+
+.btn-cancel {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.btn-save {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Ajuste para los enlaces de administración en la página principal */
+.admin-links {
+    /* Usar un ancho máximo similar al de la página principal si es necesario */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: right;
+}
+
+/* Media Queries para vistas de administración en móviles */
+@media (max-width: 600px) {
+    .form-row, .details-grid, .image-upload-area {
+        flex-direction: column; /* Apila elementos */
+        display: flex; /* Mantiene la compatibilidad con flex */
+        gap: 0;
+    }
+
+    .form-group-half {
+        margin-bottom: 15px;
+    }
+
+    .image-box {
+        width: calc(33% - 10px); /* Intenta mantener 3 por fila si hay espacio */
+        height: 100px;
     }
 }

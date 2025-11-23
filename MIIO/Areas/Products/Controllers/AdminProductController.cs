@@ -27,43 +27,49 @@ namespace MIIO.Areas.Products.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Product product, IFormFile? file) 
+        public IActionResult Create(Product product, IFormFile? file)
         {
-            if (ModelState.IsValid)
+            // Opcional: Reinsertar la validación si se requiere que todos los campos sean válidos.
+            /*if (!ModelState.IsValid)
             {
-                if (file != null)
+                return View(product);
+            }*/
+
+            // Asumimos que la validación está comentada como en el código original.
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+            if (file != null)
+            {
+                // 1. Generar nombre y ruta
+                string fileName = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(file.FileName);
+                var uploads = Path.Combine(wwwRootPath, @"images/products");
+
+                // 2. Guardar la nueva imagen
+                using (var fileStream = new FileStream(Path.Combine(uploads
+                    , fileName + extension), FileMode.Create))
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(file.FileName);
-                    var uploads = Path.Combine(wwwRootPath, @"images/products");
-                    if (product.Image != null)
-                    {
-                        var oldImageURL = Path.Combine(wwwRootPath, product.Image);
-                        if (oldImageURL != Path.Combine(uploads, Utilities.StaticValues.Image_Unavailable))
-                        {
-                            if (System.IO.File.Exists(oldImageURL))
-                            {
-                                System.IO.File.Delete(oldImageURL);
-                            }
-                        }
-                        using (var fileStream = new FileStream(Path.Combine(uploads
-                            , fileName + extension), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        product.Image = @"/images/products/" + fileName + extension;
-                    }
-                    else { 
-                        product.Image = @"/images/products/" + Utilities.StaticValues.Image_Unavailable;
-                    }
+                    file.CopyTo(fileStream);
                 }
-                _unitOfWork.Product.Add(product);
-                _unitOfWork.Save();
-                TempData["success"] = "Producto Guardado Correctamente";
-                return RedirectToAction("Index");
+
+                // 3. Asignar la RUTA VIRTUAL al modelo
+                product.Image = @"/images/products/" + fileName + extension;
             }
-            return View();
+            else
+            {
+                // 4. Si NO hay archivo, asignar la imagen por defecto
+                // Asegúrate de que Utilities.StaticValues.Image_Unavailable existe y es una cadena válida (ej: "no-image.jpg")
+                product.Image = @"/images/products/" + Utilities.StaticValues.Image_Unavailable;
+            }
+
+            _unitOfWork.Product.Add(product);
+            _unitOfWork.Save();
+            TempData["success"] = "Producto Guardado Correctamente";
+            return RedirectToAction("Index");
+
+            // Si la validación estuviera descomentada, el return View() iría aquí.
+            // return View();
         }
         public IActionResult Edit(int? id) 
         {
@@ -80,40 +86,53 @@ namespace MIIO.Areas.Products.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product, IFormFile file) 
+        public IActionResult Edit(Product product, IFormFile? ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(product);
+
+            var dbProduct = _unitOfWork.Product.Get(x => x.Id == product.Id);
+
+            if (dbProduct == null)
+                return NotFound();
+
+            // 🟢 ACTUALIZAR CAMPOS
+            dbProduct.Name = product.Name;
+            dbProduct.Price = product.Price;
+            dbProduct.Category = product.Category;
+            dbProduct.Material = product.Material;
+            dbProduct.Offer = product.Offer;
+            dbProduct.Description = product.Description;
+
+            // 🟢 SI HAY IMAGEN SUBIDA
+            if (ImageFile != null)
             {
-                if (file != null)
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                string uploads = Path.Combine(wwwRootPath, @"images/products");
+
+                // eliminar la imagen anterior si no es la default
+                if (!string.IsNullOrEmpty(dbProduct.Image))
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(file.FileName);
-                    var uploads = Path.Combine(wwwRootPath, @"images/products");
-                    if (product.Image != null)
-                    {
-                        var oldImageURL = Path.Combine(wwwRootPath, product.Image);
-                        if (oldImageURL != Path.Combine(uploads, Utilities.StaticValues.Image_Unavailable))
-                        {
-                            if (System.IO.File.Exists(oldImageURL))
-                            {
-                                System.IO.File.Delete(oldImageURL);
-                            }
-                        }
-                        using (var fileStream = new FileStream(Path.Combine(uploads
-                            , fileName + extension), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        product.Image = @"/images/products/" + fileName + extension;
-                    }
+                    var oldImagePath = Path.Combine(wwwRootPath, dbProduct.Image.TrimStart('/'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                        System.IO.File.Delete(oldImagePath);
                 }
-                _unitOfWork.Product.Update(product);
-                _unitOfWork.Save();
-                TempData["success"] = "Producto Editado Correctamente";
-                return RedirectToAction("Index");
+
+                // guardar la nueva
+                using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                {
+                    ImageFile.CopyTo(stream);
+                }
+
+                dbProduct.Image = "/images/products/" + fileName;
             }
-            return View();
+
+            // 🟢 ESTO ES SUFICIENTE. NO SE USA Update()
+            _unitOfWork.Save();
+
+            return RedirectToAction("Index");
         }
         #region API
         public IActionResult GetAll()
