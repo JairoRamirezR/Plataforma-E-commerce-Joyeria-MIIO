@@ -10,51 +10,53 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         ajax: {
-            "url": "/Products/AdminProduct/GetAll"
+            url: "/Products/AdminProduct/GetAll"
         },
-        "columns": [
-            { "data": "name", "width": "15%", "title": "Nombre" },
-            { "data": "description", "width": "20%", "title": "Descripción" },
-            { "data": "category", "width": "10%", "title": "Categoría" },
-            { "data": "material", "width": "10%", "title": "Material" },
-            { "data": "price", "width": "10%", "title": "Precio" },
+        columns: [
+            { data: "name" },
+            { data: "description" },
+            { data: "category" },
+            { data: "material" },
+            { data: "price" },
             {
-                "data": "offer",
-                "width": "8%",
-                "title": "Oferta",
-                "render": function (data) {
+                data: "offer",
+                render: function (data) {
                     return data ? "Sí" : "No";
                 }
             },
-            {
-                "data": "image",
-                "width": "12%",
-                "title": "Imagen",
-                "render": function (data) {
-                    return `
-                        <div class="card" style="width: 70px;">
-                            <img src="${data}" class="card-img-top" alt="img"
-                             style="max-width: 60px; max-height: 60px; margin: auto; padding-top: 5px;" />
-                        </div>`;
-                }
-            },
-            {
-                "data": "id",
-                "render": function (data) {
-                    return `
-                        <a href="/Products/AdminProduct/Edit/${data}" class="btn btn-primary">
+            { data: "image" },
+            { data: "id" }
+        ],
+        columnDefs: [{
+            targets: "_all",
+            visible: false
+        }],
+        createdRow: function (row, data) {
+            $(row).html(`
+                <div class="product-card">
+                    <img src="${data.image}" alt="${data.name}" />
+                    <div class="product-info">
+                        <h5>${data.name}</h5>
+                        <p>${data.description}</p>
+                        <p><strong>Categoría:</strong> ${data.category}</p>
+                        <p><strong>Material:</strong> ${data.material}</p>
+                        <p class="product-price">₡${data.price}</p>
+                        ${data.offer ? '<p class="product-offer">¡En oferta!</p>' : ''}
+                    </div>
+                    <div>
+                        <a href="/Products/AdminProduct/Edit/${data.id}" class="btn btn-outline-primary btn-sm me-2">
                             <i class="bi bi-pencil-square"></i> Editar
                         </a>
-                        <a onClick=Delete(${data}) class="btn btn-danger mx-2">
+                        <a onClick="Delete(${data.id})" class="btn btn-outline-danger btn-sm">
                             <i class="bi bi-x-circle"></i> Eliminar
                         </a>
-                    `;
-                },
-                "width": "15%"
-            }
-        ]
+                    </div>
+                </div>
+            `);
+        }
     });
 }
+
 
 function Delete(_id) {
     Swal.fire({
