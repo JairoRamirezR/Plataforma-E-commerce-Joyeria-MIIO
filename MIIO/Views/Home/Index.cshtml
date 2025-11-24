@@ -1,53 +1,152 @@
 ﻿@model IEnumerable<MIIO.Models.Product>
 
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
+	// Recuperar la lista de productos destacados desde ViewData
+	var featuredProducts = ViewData["FeaturedProducts"] as List<MIIO.Models.Product>;
+
+	// Estilos CSS Personalizados para el color de la marca
+	var brandColor = "#FFD700"; // Amarillo Oro
+	var textColor = "#000000"; // Negro
+	var logoGray = "#808080"; // Gris del texto del logo (usado para el botón)
+	var whiteCardBg = "#FFFFFF"; // Fondo blanco explícito para tarjetas
 }
 
-
 <div class="text-center">
-    @* Este div contiene el logo, barra de búsqueda y navegación. Se asume que estos están en el _Layout.cshtml o en la parte superior del archivo. *@
 
-    <div class="hero-section">
-        <h3>IMAGEN</h3>
-        <p>Espacio destinado para una imagen que cuente la historia de Miio, resaltando la elegancia y calidad de nuestras piezas de plata</p>
-    </div>
-    @if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
-    {
-        <div class="product-gallery-container mt-4 mb-5">
-            <h2 class="text-center">Nuestros Productos Destacados</h2>
-    
+	<div class="hero-section">
+		<h3>IMAGEN</h3>
+		<p>Espacio destinado para una imagen que cuente la historia de Miio, resaltando la elegancia y calidad de nuestras piezas de plata</p>
+	</div>
 
-            @if (!Model.Any())
-            {
-                <div class="alert alert-warning text-center" role="alert">
-                    No se encontraron productos que coincidan con su búsqueda.
-                </div>
-            }
-            @if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
-            {
-                    <div class="row">
-                        @foreach (var product in Model)
-                        {
-                            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                                <div class="card h-100">
-                                    <img src=@product.Image class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title">@product.Name</h5>
-                                        <p class="card-text text-muted">@product.Description</p>
-                                        <p class="card-text mt-auto">
-                                            <strong>Precio:</strong>
-                                            <span class="text-success">@product.Price.ToString("C")</span>
-                                        </p>
+	<hr class="my-5" />
 
-                                        <a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary mt-2">Ver Detalle</a>
-                                
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-            }
-        </div>
-    }
+	<h2 class="text-center mb-4">Nuestros Productos Destacados </h2>
+
+	@if (featuredProducts != null && featuredProducts.Any())
+	{
+		<div id="featuredProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+			<div class="carousel-inner pb-5">
+				@{
+					// Lógica para agrupar los productos de 4 en 4
+					int totalFeaturedItems = featuredProducts.Count();
+					int itemsPerSlide = 4;
+					int featuredSlideCount = (int)Math.Ceiling((double)totalFeaturedItems / itemsPerSlide);
+				}
+
+				@for (int i = 0; i < featuredSlideCount; i++)
+				{
+					<div class="carousel-item @(i == 0 ? "active" : "")">
+						<div class="row justify-content-center">
+							@{
+								var slideFeaturedProducts = featuredProducts.Skip(i * itemsPerSlide).Take(itemsPerSlide);
+							}
+
+							@foreach (var product in slideFeaturedProducts)
+							{
+								<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+									<div class="card h-100 shadow-lg" style="border: 2px solid @brandColor; background-color: @whiteCardBg;">
+										<img src=@product.Image class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
+										<div class="card-body d-flex flex-column">
+											<h5 class="card-title" style="color: @textColor;">@product.Name</h5>
+											<p class="card-text" style="color: @textColor;">@product.Description</p>
+											<p class="card-text mt-auto" style="color: @textColor;">
+												<strong>Precio:</strong>
+												<span class="text-secondary text-decoration-line-through me-2">Antes: @(product.Price * 1.2m)</span>
+												<span class="fw-bold">Ahora:</span>
+												<span class="fw-bold">@product.Price.ToString("C")</span>
+											</p>
+
+											<a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn mt-2" style="background-color: @brandColor; border-color: @brandColor; color: @textColor;">Ver Detalle</a>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				}
+			</div>
+
+			@* Controles de flecha (Anterior/Siguiente) para Destacados *@
+			<button class="carousel-control-prev" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
+				<span class="visually-hidden">Anterior</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon bg-dark rounded" aria-hidden="true"></span>
+				<span class="visually-hidden">Siguiente</span>
+			</button>
+		</div>
+
+	}
+	else
+	{
+		<div class="alert alert-info text-center" role="alert">
+			Actualmente no hay productos con ofertas destacadas.
+		</div>
+	}
+
+	<hr class="my-5" />
+
+	<h2 class="text-center mb-4">Todos los Productos </h2>
+
+	@if (!Model.Any())
+	{
+		<div class="alert alert-warning text-center" role="alert">
+			No se encontraron productos en la base de datos.
+		</div>
+	}
+	else
+	{
+		<div id="allProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+			<div class="carousel-inner pb-5">
+				@{
+					// Lógica para agrupar los productos de 4 en 4
+					int totalItems = Model.Count();
+					int itemsPerSlide = 4;
+					int slideCount = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
+				}
+
+				@for (int i = 0; i < slideCount; i++)
+				{
+					<div class="carousel-item @(i == 0 ? "active" : "")">
+						<div class="row justify-content-center">
+							@{
+								var slideProducts = Model.Skip(i * itemsPerSlide).Take(itemsPerSlide);
+							}
+
+							@foreach (var product in slideProducts)
+							{
+								<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+									<div class="card h-100 shadow-sm" style="background-color: @whiteCardBg;">
+										<img src=@product.Image class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
+										<div class="card-body d-flex flex-column">
+											<h5 class="card-title" style="color: @textColor;">@product.Name</h5>
+											<p class="card-text" style="color: @textColor;">@product.Description</p>
+											<p class="card-text mt-auto" style="color: @textColor;">
+												<strong>Precio:</strong>
+												<span style="color: @textColor;">@product.Price.ToString("C")</span>
+											</p>
+
+											<a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn mt-2" style="background-color: @logoGray; border-color: @logoGray; color: @whiteCardBg;">Ver Detalle</a>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					</div>
+				}
+			</div>
+
+			@* Controles de flecha (Anterior/Siguiente) *@
+			<button class="carousel-control-prev" type="button" data-bs-target="#allProductsCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
+				<span class="visually-hidden">Anterior</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#allProductsCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon bg-dark rounded" aria-hidden="true"></span>
+				<span class="visually-hidden">Siguiente</span>
+			</button>
+		</div>
+	}
 </div>

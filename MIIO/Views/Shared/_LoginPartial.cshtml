@@ -28,8 +28,16 @@
                             Administrar Productos
                         </a>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
                 }
+
+                <li>
+                    @* Enlace a: /Orders/Order *@
+                    <a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="Order">
+                        Administrar Ordenes
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+
 
                 @* 4. Opción de Perfil/Manage (opcional, pero útil) *@
                 <li>

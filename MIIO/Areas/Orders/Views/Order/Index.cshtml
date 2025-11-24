@@ -1,0 +1,33 @@
+﻿<partial name="_Notifications" />
+
+@{
+    ViewData["Title"] = "Historial de Pedidos";
+}
+
+<div class="order-history-container">
+
+    <h1 class="order-history-title">HISTORIAL DE PEDIDOS</h1>
+    <p class="order-history-subtitle">Revisa el estado y detalles de tus compras anteriores</p>
+
+    <table class="order-table" id="tblOrders">
+        <thead>
+            <tr>
+                <th>Número de Pedido</th>
+                <th>Descripción</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts {
+    <!-- Carga el script específico para el historial de cliente  -->
+    <!-- PURA IA EL ORDER HISTORY-->
+    <script src="~/js/orderHistory.js" asp-append-version="true"></script>
+}

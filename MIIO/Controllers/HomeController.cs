@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MIIO.Data.Repository.Interfaces; // Asegúrate de agregar este using
 using MIIO.Models;
+using System.Linq; // Necesario para usar .Where() y .ToList()
 
 namespace MIIO.Controllers
 {
@@ -19,13 +20,18 @@ namespace MIIO.Controllers
 
         public IActionResult Index()
         {
-            // Obtener todos los productos de la base de datos
-            // La función GetAll puede necesitar ajustes (ej: .ToList() o .AsEnumerable())
-            // dependiendo de tu implementación de IUnitOfWork y el repositorio.
-            var productList = _unitOfWork.Product.GetAll();
+            // Obtener TODOS los productos (para la sección "Todos los productos")
+            var allProducts = _unitOfWork.Product.GetAll();
 
-            // Pasar la lista de productos a la vista
-            return View(productList);
+            // Obtener los productos con oferta (para la sección "Destacados")
+            // Filtramos los productos donde la propiedad Offer es verdadera.
+            var featuredProducts = allProducts.Where(p => p.Offer == true).ToList();
+
+            // Pasar los productos destacados a la vista usando ViewData
+            ViewData["FeaturedProducts"] = featuredProducts;
+
+            // Pasar TODOS los productos como el modelo principal de la vista
+            return View(allProducts);
         }
 
         public IActionResult Privacy()
