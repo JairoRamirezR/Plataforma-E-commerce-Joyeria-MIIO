@@ -144,7 +144,7 @@ function handleStatusChange(orderId, newStatus, dropdownElement) {
 
     Swal.fire({
         title: "¿Estás seguro?",
-        text: `¿Deseas cambiar el estado a "${newStatus}"? ¡Esta acción no es fácilmente reversible!`,
+        text: `¿Deseas cambiar el estado a "${newStatus}"?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -193,6 +193,16 @@ function updateOrderStatus(orderId, newStatus, dropdownElement) {
             $(dropdownElement).prop('disabled', false);
 
             if (data.success === true) {
+
+                // 1. Aseguramos que el valor del dropdown sea el nuevo estado.
+                $(dropdownElement).val(newStatus);
+
+                // 2. ACTUALIZAMOS el estado previo, para que si hay un cambio posterior,
+                $(dropdownElement).data('previous-status', newStatus);
+
+                // 3. 🎯 CORRECCIÓN: Forzamos la recarga de DataTables para reflejar el cambio.
+                customerDataTable.ajax.reload(null, false);
+
                 // Éxito: Usamos el modal de éxito de SweetAlert
                 Swal.fire(
                     '¡Actualizado!',
@@ -201,7 +211,6 @@ function updateOrderStatus(orderId, newStatus, dropdownElement) {
                 );
             } else {
                 // Error de negocio
-                // Lanzamos el error con el mensaje del servidor para ser capturado en el catch
                 throw new Error(data.message);
             }
         })
