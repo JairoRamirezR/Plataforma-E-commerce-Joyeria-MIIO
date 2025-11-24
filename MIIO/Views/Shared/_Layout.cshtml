@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MIIO</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MIIO.styles.css" asp-append-version="true" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <style>
         /* 1. HTML debe ocupar el 100% de la altura y ser el punto de referencia */
@@ -33,18 +35,30 @@
     </style>
 </head>
 <body>
+
+    @if (TempData["success"] != null)
+    {
+        <script type="text/javascript">
+            toastr["success"]('@TempData["success"]')
+        </script>
+    }
+
+    @if (TempData["error"] != null)
+    {
+        <script type="text/javascript">
+            toastr["error"]('@TempData["error"]')
+        </script>
+    }
+
     <header>
-        <!-- BAR --> 
         <div class="top-bar">
             <a asp-page="/Login">
                 <li class="nav-item">
-                    <!--<a class="icon fa-solid fa-user" id="login" asp-area="Identity" asp-page="/Account/Login"> Login</a>-->
                     <partial name="_LoginPartial" />
                 </li>
             </a>
         </div>
 
-        <!-- MIIO LOGO -->
         <div class="logo-container">
             <a asp-page="/Index">
                 <a asp-page="/Index">
@@ -53,7 +67,6 @@
             </a>
         </div>
 
-        <!-- Search Bar + Shopping cart-->
         <div class="search-cart-container">
             <form method="get" asp-area="Products" asp-controller="Search" asp-action="Results" class="search-box">
                 <span class="search-icon fa fa-search" aria-hidden="true"></span>
@@ -65,18 +78,10 @@
                 Carrito
             </a>
         </div>
-        @* ⭐ INICIO DE LA MODIFICACIÓN: Enlaces de Administración ⭐ *@
-        @if (User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
-        {
-            <div class="admin-links text-right mb-4" style="padding-top: 20px;">
-                <a asp-area="Products" asp-controller="AdminProduct" asp-action="Create" class="btn btn-primary" style="background-color: #333; border-color: #333;">➕ Crear Producto</a>
-                <a asp-area="Products" asp-controller="AdminProduct" asp-action="Index" class="btn btn-secondary" style="background-color: #6c757d; border-color: #6c757d;">✏️ Editar/Borrar Producto</a>
-            </div>
-        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            <partial name="_Notifications" />
+
             @RenderBody()
         </main>
     </div>
@@ -86,12 +91,14 @@
             &copy; 2025 - MIIO - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" ... /> 
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="//cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
