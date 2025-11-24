@@ -4,6 +4,12 @@
     ViewData["Title"] = "Historial de Pedidos";
 }
 
+<script>
+    // Se define la variable 'isAdmin' antes de cargar el script principal.
+    // Asume que MIIO.Utilities.StaticValues.Role_Admin es la constante del rol "Admin".
+    var isAdmin = @(User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin) ? "true" : "false");
+</script>
+
 <div class="order-history-container">
 
     <h1 class="order-history-title">HISTORIAL DE PEDIDOS</h1>

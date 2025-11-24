@@ -1,5 +1,6 @@
 ﻿var customerDataTable;
-// Definition of possible states for the dropdown (adjust according to your model)
+// La variable 'isAdmin' debe estar definida en la vista antes de cargar este script.
+
 const possibleStates = [
     "Pendiente",
     "En Proceso",
@@ -10,13 +11,11 @@ const possibleStates = [
 
 // Function that executes when the HTML document is fully loaded.
 $(document).ready(function () {
-    // 1. Initialize and load the orders table.
     loadCustomerDataTable();
 
-    // 2. Configure automatic table reload every 30 seconds
+    // 2. Configure automatic table reload every 30 seconds (aplica para todos)
     setInterval(function () {
         if (customerDataTable) {
-            // Reloads data without changing current pagination (false)
             customerDataTable.ajax.reload(null, false);
         }
     }, 30000);
@@ -25,14 +24,11 @@ $(document).ready(function () {
 // Main function to initialize and configure DataTables.
 function loadCustomerDataTable() {
     customerDataTable = $('#tblOrders').DataTable({
-        // 1. Data Source Configuration (API)
         "ajax": {
             "url": "/Orders/Order/GetAll",
             "type": "GET",
             "datatype": "json"
         },
-
-        // 2. Column Definition and Rendering
         "columns": [
             // Column 1: Order Number (ID)
             {
@@ -75,25 +71,29 @@ function loadCustomerDataTable() {
                     return date.toLocaleDateString('es-CR', options);
                 }
             },
-            // Column 5: ORDER STATE (MODIFIED TO DROPDOWN)
+            // 🛑 Columna 5: ESTADO (APLICA LÓGICA DE ROL) 🛑
             {
                 "data": "state",
                 "width": "15%",
                 "render": function (data, type, row) {
-                    const orderId = row.id;
+                    // Si el usuario es administrador, muestra el dropdown
+                    if (isAdmin) {
+                        const orderId = row.id;
+                        let selectHtml = `<select class="form-select status-dropdown" data-order-id="${orderId}">`;
 
-                    // Build the dropdown menu
-                    let selectHtml = `<select class="form-select status-dropdown" data-order-id="${orderId}">`;
+                        possibleStates.forEach(state => {
+                            const selected = (state === data) ? 'selected' : '';
+                            const statusClass = state.toLowerCase().replace(/\s/g, '-');
 
-                    possibleStates.forEach(state => {
-                        const selected = (state === data) ? 'selected' : '';
-                        const statusClass = state.toLowerCase().replace(/\s/g, '-');
-
-                        selectHtml += `<option value="${state}" class="${statusClass}" ${selected}>${state}</option>`;
-                    });
-
-                    selectHtml += `</select>`;
-                    return selectHtml;
+                            selectHtml += `<option value="${state}" class="${statusClass}" ${selected}>${state}</option>`;
+                        });
+                        selectHtml += `</select>`;
+                        return selectHtml;
+                    }
+                    // Si NO es administrador (cliente), muestra solo el texto
+                    else {
+                        return `<span class="order-state-text">${data}</span>`;
+                    }
                 }
             },
             // Column 6: Actions (Details Link)
@@ -109,8 +109,7 @@ function loadCustomerDataTable() {
                 }
             }
         ],
-
-        // 3. DataTables General Configuration
+        // ... (configuraciones generales) ...
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
         },
@@ -122,113 +121,106 @@ function loadCustomerDataTable() {
 
         // 4. Initialization complete to add Event Listener
         "initComplete": function (settings, json) {
-            $('#tblOrders').on('change', '.status-dropdown', function () {
-                const orderId = $(this).data('order-id');
-                const newStatus = $(this).val();
+            // El listener SOLO se añade si es administrador
+            if (isAdmin) {
+                $('#tblOrders').on('change', '.status-dropdown', function () {
+                    const orderId = $(this).data('order-id');
+                    const newStatus = $(this).val();
 
-                // Llamamos al manejador de SweetAlert
-                handleStatusChange(orderId, newStatus, this);
-            });
-        }
-    });
-}
-
-// ====================================================================
-// FUNCIÓN PARA MANEJAR EL CAMBIO Y LA CONFIRMACIÓN CON SWEETALERT
-// ====================================================================
-
-function handleStatusChange(orderId, newStatus, dropdownElement) {
-    // Almacenamos el estado actual como "previo" antes de la confirmación
-    const previousStatus = $(dropdownElement).find('option:selected').text();
-    $(dropdownElement).data('previous-status', previousStatus);
-
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: `¿Deseas cambiar el estado a "${newStatus}"?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, ¡actualizar!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Si el usuario confirma, procedemos con la actualización
-            updateOrderStatus(orderId, newStatus, dropdownElement);
-        } else {
-            // Si el usuario cancela, revertimos el dropdown visualmente
-            $(dropdownElement).val(previousStatus);
-        }
-    });
-}
-
-
-// ====================================================================
-// FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL PEDIDO EN EL BACKEND (AJAX)
-// ====================================================================
-
-function updateOrderStatus(orderId, newStatus, dropdownElement) {
-    // Guardamos el estado previo para el caso de error en el catch
-    const previousStatus = $(dropdownElement).data('previous-status');
-
-    // Disable dropdown while processing
-    $(dropdownElement).prop('disabled', true);
-
-    // API Call
-    fetch('/Orders/Order/UpdateStatus', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            Id: orderId,
-            NewStatus: newStatus
-        })
-    })
-        .then(response => {
-            // Siempre intentamos parsear la respuesta como JSON
-            return response.json();
-        })
-        .then(data => {
-            $(dropdownElement).prop('disabled', false);
-
-            if (data.success === true) {
-
-                // 1. Aseguramos que el valor del dropdown sea el nuevo estado.
-                $(dropdownElement).val(newStatus);
-
-                // 2. ACTUALIZAMOS el estado previo, para que si hay un cambio posterior,
-                $(dropdownElement).data('previous-status', newStatus);
-
-                // 3. 🎯 CORRECCIÓN: Forzamos la recarga de DataTables para reflejar el cambio.
-                customerDataTable.ajax.reload(null, false);
-
-                // Éxito: Usamos el modal de éxito de SweetAlert
-                Swal.fire(
-                    '¡Actualizado!',
-                    data.message,
-                    'success'
-                );
-            } else {
-                // Error de negocio
-                throw new Error(data.message);
+                    // Llamamos al manejador de SweetAlert
+                    handleStatusChange(orderId, newStatus, this);
+                });
             }
-        })
-        .catch(error => {
-            // Error de red, error de parseo JSON o error de negocio
-            console.error('Fallo en la actualización:', error.message);
+        }
+    });
+}
 
-            // Revertir y habilitar el dropdown
-            $(dropdownElement).val(previousStatus);
-            $(dropdownElement).prop('disabled', false);
+// ====================================================================
+// FUNCIÓN PARA MANEJAR EL CAMBIO Y LA CONFIRMACIÓN (SOLO ADMIN)
+// ====================================================================
+// Estas funciones SOLO se necesitan si isAdmin es true. 
+// Las definimos fuera de loadCustomerDataTable para evitar redefiniciones.
 
-            // Mostrar el error usando SweetAlert
-            Swal.fire(
-                '¡Error!',
-                error.message.includes("Error:")
-                    ? error.message
-                    : `❌ Error inesperado: ${error.message}`,
-                'error'
-            );
+if (isAdmin) {
+    function handleStatusChange(orderId, newStatus, dropdownElement) {
+        // Almacenamos el estado actual como "previo" antes de la confirmación
+        const previousStatus = $(dropdownElement).find('option:selected').text();
+        $(dropdownElement).data('previous-status', previousStatus);
+
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: `¿Deseas cambiar el estado a "${newStatus}"? ¡Esta acción no es fácilmente reversible!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, ¡actualizar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateOrderStatus(orderId, newStatus, dropdownElement);
+            } else {
+                $(dropdownElement).val(previousStatus);
+            }
         });
+    }
+
+    // ====================================================================
+    // FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL PEDIDO EN EL BACKEND (AJAX)
+    // ====================================================================
+
+    function updateOrderStatus(orderId, newStatus, dropdownElement) {
+        const previousStatus = $(dropdownElement).data('previous-status');
+
+        $(dropdownElement).prop('disabled', true);
+
+        // API Call
+        fetch('/Orders/Order/UpdateStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                Id: orderId,
+                NewStatus: newStatus
+            })
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                $(dropdownElement).prop('disabled', false);
+
+                if (data.success === true) {
+
+                    $(dropdownElement).val(newStatus);
+                    $(dropdownElement).data('previous-status', newStatus);
+
+                    // Forzamos la recarga de DataTables para reflejar el cambio.
+                    customerDataTable.ajax.reload(null, false);
+
+                    Swal.fire(
+                        '¡Actualizado!',
+                        data.message,
+                        'success'
+                    );
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Fallo en la actualización:', error.message);
+
+                $(dropdownElement).val(previousStatus);
+                $(dropdownElement).prop('disabled', false);
+
+                Swal.fire(
+                    '¡Error!',
+                    error.message.includes("Error:")
+                        ? error.message
+                        : `❌ Error inesperado: ${error.message}`,
+                    'error'
+                );
+            });
+    }
 }
