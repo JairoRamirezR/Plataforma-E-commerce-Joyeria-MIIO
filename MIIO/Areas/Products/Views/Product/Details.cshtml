@@ -104,7 +104,11 @@
             <div class="offer">¡En oferta!</div>
         }
         <div class="short-description">@Model.Description</div>
-        <button class="add-to-cart">Agregar al carrito</button>
+        <button type="button" class="add-to-cart" onclick="addToCart(@Model.Id)">
+            Agregar al carrito
+        </button>
+
+        
 
         <div class="specs">
             <h4>Descripción</h4>
@@ -121,3 +125,4 @@
         </div>
     </div>
 </div>
+<script src="~/js/cart.js"></script>
