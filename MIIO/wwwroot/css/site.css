@@ -121,7 +121,6 @@
             color: #000;
         }
 
-
 /* FEATURED IMAGE */
 .hero-section {
     text-align: center;
@@ -164,9 +163,7 @@
     margin: 0 auto; /* Centrar la cuadrícula */
 }
 
-/* ------------------------------------- */
-/* TARJETA DE PRODUCTO (Card) */
-/* ------------------------------------- */
+/* Prodcut Card */
 .product-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -182,7 +179,7 @@
 
 .product-image-placeholder {
     width: 100%;
-    height: 250px; /* Altura fija para la imagen */
+    height: 250px; 
     background-color: #f7f7f7;
     margin-bottom: 10px;
     display: flex;
@@ -230,7 +227,7 @@
         background-color: #555;
     }
 
-/* Íconos simulados (usar Font Awesome o similar en proyecto real) */
+/* Icons from FontAwesome*/
 .material-icons {
     font-family: 'Material Icons'; /* Asumimos una fuente de íconos */
     font-size: 18px;
@@ -238,7 +235,7 @@
     margin-left: 5px;
 }
 
-/* Estilos de Media Query para Responsividad */
+/* Media query Styles */
 @media (max-width: 768px) {
     .product-grid {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -254,11 +251,10 @@
 
 
 /* ------------------------------------- */
-/* ⭐ ESTILOS AÑADIDOS PARA VISTAS DE ADMINISTRACIÓN (EDITAR/CREAR PRODUCTO) ⭐ */
+/* ⭐ Admin Styles (Edit, Create Product*/
 /* ------------------------------------- */
 
 .main-content {
-    /* Define el área central para las vistas de edición, similar a la maqueta */
     max-width: 900px;
     margin: 20px auto;
     padding: 0 20px;
@@ -278,26 +274,26 @@
     margin-bottom: 30px;
 }
 
-/* Estilos para las tarjetas de información (Información Básica, Detalles, Imágenes) */
+/* Styles for the info Cards */
 .card {
     background-color: #ffffff;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra ligera para destacar */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
     border: 1px solid #e0e0e0;
 }
 
 .card-title {
     font-size: 1.2em;
-    font-weight: 600; /* Coherente con otros títulos */
+    font-weight: 600; 
     color: #333;
     margin-bottom: 20px;
     border-bottom: 1px solid #f0f0f0;
     padding-bottom: 10px;
 }
 
-/* Estilos de Formulario */
+/* Form Styles */
 .form-group {
     margin-bottom: 15px;
 }
@@ -307,7 +303,7 @@
         font-size: 0.9em;
         color: #333;
         margin-bottom: 5px;
-        font-weight: bold; /* Etiquetas en negrita */
+        font-weight: bold; 
     }
 
 .input-full, .input-half, .full-description-textarea {
@@ -315,8 +311,8 @@
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Incluye padding en el ancho/alto total */
-    background-color: #f9f9f9; /* Fondo gris claro en el input/textarea */
+    box-sizing: border-box; 
+    background-color: #f9f9f9; 
     font-size: 14px;
     color: #333;
 }
@@ -326,7 +322,7 @@
     resize: vertical;
 }
 
-/* Disposición de la fila de Precio y SKU/Categoría */
+/* Price & Sku display*/
 .form-row {
     display: flex;
     gap: 20px;
@@ -336,7 +332,7 @@
     flex: 1;
 }
 
-/* Cuadrícula de Detalles (usada en la segunda tarjeta) */
+/* Details */
 .details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -344,11 +340,11 @@
     margin-bottom: 20px;
 }
 
-/* Contenedor de Subida de Imágenes */
+/* Image Space */
 .image-upload-area {
     display: flex;
     gap: 15px;
-    flex-wrap: wrap; /* Para que las imágenes se ajusten */
+    flex-wrap: wrap; 
     margin-bottom: 10px;
 }
 
@@ -366,7 +362,7 @@
 
 .upload-placeholder {
     background-color: #fff;
-    border: 2px dashed #ccc; /* Borde punteado para indicar subida */
+    border: 2px dashed #ccc; 
     flex-direction: column;
     cursor: pointer;
     transition: border-color 0.2s;
@@ -388,10 +384,10 @@
     margin-top: 5px;
 }
 
-/* Botones de Acción (Guardar/Cancelar) */
+/* Action Buttons (Save - Delete)*/
 .action-buttons {
     display: flex;
-    justify-content: flex-end; /* Alinea a la derecha como en la maqueta */
+    justify-content: flex-end; 
     gap: 10px;
     padding: 20px 0;
 }
@@ -403,7 +399,7 @@
     cursor: pointer;
     font-weight: 600;
     font-size: 1em;
-    text-decoration: none; /* Asegurar que los a.btn se vean como botones */
+    text-decoration: none; 
     transition: opacity 0.2s;
 }
 
@@ -422,20 +418,17 @@
     opacity: 0.9;
 }
 
-/* Ajuste para los enlaces de administración en la página principal */
 .admin-links {
-    /* Usar un ancho máximo similar al de la página principal si es necesario */
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
     text-align: right;
 }
 
-/* Media Queries para vistas de administración en móviles */
 @media (max-width: 600px) {
     .form-row, .details-grid, .image-upload-area {
-        flex-direction: column; /* Apila elementos */
-        display: flex; /* Mantiene la compatibilidad con flex */
+        flex-direction: column; 
+        display: flex; 
         gap: 0;
     }
 
@@ -444,7 +437,218 @@
     }
 
     .image-box {
-        width: calc(33% - 10px); /* Intenta mantener 3 por fila si hay espacio */
+        width: calc(33% - 10px); 
         height: 100px;
     }
 }
+
+/* Order History */
+
+.order-history-container {
+    max-width: 1200px;
+    margin: 50px auto; 
+    padding: 0 20px;
+}
+
+.order-history-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.order-history-subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+/*ORDER TABLE STYLES*/
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; 
+    font-size: 14px;
+}
+
+    .order-table thead th {
+        text-align: left;
+        padding: 15px 0;
+        color: #333;
+        font-weight: 600;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .order-table tbody tr {
+        border-bottom: 1px solid #eee; 
+        transition: background-color 0.2s;
+    }
+
+        .order-table tbody tr:hover {
+            background-color: #fcfcfc;
+        }
+
+    .order-table tbody td {
+        padding: 15px 0;
+        color: #555;
+        vertical-align: middle;
+    }
+
+.order-id {
+    font-weight: 600;
+    color: #333;
+}
+
+.order-info-icon {
+    color: #B8860B; 
+    margin-right: 5px;
+    cursor: help;
+}
+
+.order-price {
+    font-weight: 700;
+}
+
+
+.details-link {
+    color: #1a73e8; 
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+    .details-link:hover {
+        color: #0d47a1;
+    }
+
+    .details-link i {
+        margin-left: 5px;
+        font-size: 12px;
+    }
+
+/* STATE */
+.status-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+    /* STATE COLORS */
+    .status-tag.entregado { 
+        background-color: #e6f6ed; 
+        color: #38a169; 
+    }
+
+    .status-tag.en-camino { 
+        background-color: #e6f6ff; 
+        color: #1e90ff; 
+
+    .status-tag.procesando { 
+        background-color: #fff4e6; 
+        color: #ff9900; 
+    }
+
+    .status-tag.cancelado { 
+        background-color: #fce4e4; 
+        color: #e53935; 
+    }
+
+
+
+.product-gallery-container {
+    padding: 30px 20px;
+    text-align: center;
+}
+    .product-gallery-container.catalog-view {
+        padding-top: 40px; 
+        padding-bottom: 80px; 
+        background-color: #f8f8f8; 
+    }
+
+    .product-gallery-container h2 {
+        font-size: 24px;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    .product-gallery-container.catalog-view h2 {
+        display: none;
+    }
+
+
+.product-grid {
+    display: grid;
+    
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px; 
+    max-width: 1200px;
+    margin: 0 auto; 
+}
+
+.product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding-bottom: 15px;
+    overflow: hidden;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+    background-color: white; 
+}
+
+    .product-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+.product-image-placeholder {
+    width: 100%;
+    height: 250px; 
+    background-color: #f7f7f7;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.product-details {
+    padding: 0 15px;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+.product-category {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.product-price {
+    font-size: 20px;
+    color: #B8860B;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.add-to-cart-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+    .add-to-cart-btn:hover {
+        background-color: #555;
+    }

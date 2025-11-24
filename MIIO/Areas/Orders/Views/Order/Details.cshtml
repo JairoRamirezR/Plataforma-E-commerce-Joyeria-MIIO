@@ -1,11 +1,15 @@
-﻿<!-- -->
+﻿@model IEnumerable<MIIO.Models.Order>
+
+@{
+    ViewData["Title"] = "Historial de Pedidos";
+}
+
 <div class="order-history-container">
 
     <h1 class="order-history-title">HISTORIAL DE PEDIDOS</h1>
     <p class="order-history-subtitle">Revisa el estado y detalles de tus compras anteriores</p>
 
-    <!-- TABLA DE PEDIDOS -->
-    <table class="order-table">
+    <table class="order-table" id="tblOrders">
         <thead>
             <tr>
                 <th>Número de Pedido</th>
@@ -17,101 +21,13 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Fila 1: Pedido Entregado -->
-            <tr data-label="ORD-0001">
-                <td class="order-id" data-label="Pedido">
-                    <i class="fa-solid fa-circle-info order-info-icon"></i>
-                    ORD-0001
-                </td>
-                <td data-label="Descripción">Collar de Plata con Dije de Loto, Aretes de Plata</td>
-                <td class="order-price" data-label="Total">₡129.50</td>
-                <td data-label="Fecha">19 de noviembre de 2024</td>
-                <td data-label="Estado">
-                    <span class="status-tag entregado">
-                        Entregado
-                    </span>
-                </td>
-                <td data-label="Detalles">
-                    <a href="#" class="details-link">Ver detalles <i class="fa-solid fa-angle-right"></i></a>
-                </td>
-            </tr>
-
-            <!-- Fila 2: Pedido En Camino -->
-            <tr data-label="ORD-0002">
-                <td class="order-id" data-label="Pedido">
-                    <i class="fa-solid fa-circle-info order-info-icon"></i>
-                    ORD-0002
-                </td>
-                <td data-label="Descripción">Anillo de Plata 925, Pulsera de Plata</td>
-                <td class="order-price" data-label="Total">₡189.00</td>
-                <td data-label="Fecha">14 de noviembre de 2024</td>
-                <td data-label="Estado">
-                    <span class="status-tag en-camino">
-                        En Camino
-                    </span>
-                </td>
-                <td data-label="Detalles">
-                    <a href="#" class="details-link">Ver detalles <i class="fa-solid fa-angle-right"></i></a>
-                </td>
-            </tr>
-
-            <!-- Fila 3: Pedido Procesando -->
-            <tr data-label="ORD-0003">
-                <td class="order-id" data-label="Pedido">
-                    <i class="fa-solid fa-circle-info order-info-icon"></i>
-                    ORD-0003
-                </td>
-                <td data-label="Descripción">Dije de Loto en Plata</td>
-                <td class="order-price" data-label="Total">₡59.99</td>
-                <td data-label="Fecha">9 de noviembre de 2024</td>
-                <td data-label="Estado">
-                    <span class="status-tag procesando">
-                        Procesando
-                    </span>
-                </td>
-                <td data-label="Detalles">
-                    <a href="#" class="details-link">Ver detalles <i class="fa-solid fa-angle-right"></i></a>
-                </td>
-            </tr>
-
-            <!-- Fila 4: Pedido Entregado -->
-            <tr data-label="ORD-0004">
-                <td class="order-id" data-label="Pedido">
-                    <i class="fa-solid fa-circle-info order-info-icon"></i>
-                    ORD-0004
-                </td>
-                <td data-label="Descripción">Collar de Temporada, Aretes de Plata con Perla</td>
-                <td class="order-price" data-label="Total">₡215.75</td>
-                <td data-label="Fecha">27 de octubre de 2024</td>
-                <td data-label="Estado">
-                    <span class="status-tag entregado">
-                        Entregado
-                    </span>
-                </td>
-                <td data-label="Detalles">
-                    <a href="#" class="details-link">Ver detalles <i class="fa-solid fa-angle-right"></i></a>
-                </td>
-            </tr>
-
-            <!-- Fila 5: Pedido Cancelado -->
-            <tr data-label="ORD-0005">
-                <td class="order-id" data-label="Pedido">
-                    <i class="fa-solid fa-circle-info order-info-icon"></i>
-                    ORD-0005
-                </td>
-                <td data-label="Descripción">Pulsera de Cuero y Plata, Charm de Corazón</td>
-                <td class="order-price" data-label="Total">₡95.00</td>
-                <td data-label="Fecha">1 de octubre de 2024</td>
-                <td data-label="Estado">
-                    <span class="status-tag cancelado">
-                        Cancelado
-                    </span>
-                </td>
-                <td data-label="Detalles">
-                    <a href="#" class="details-link">Ver detalles <i class="fa-solid fa-angle-right"></i></a>
-                </td>
-            </tr>
         </tbody>
     </table>
 
 </div>
+
+@section Scripts {
+    <!-- Carga el script específico para el historial de cliente  -->
+    <!-- PURA IA EL ORDER HISTORY-->
+    <script src="~/js/orderHistory.js" asp-append-version="true"></script>
+}

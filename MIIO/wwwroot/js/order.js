@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
     loadDataTable();
-    // Se mantiene la recarga automática (opcional, pero útil para órdenes)
+
     setInterval(function () {
         dataTable.ajax.reload(null, false);
     }, 30000);
@@ -10,27 +10,27 @@ $(document).ready(function () {
 
 function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        // 1. URL de la fuente de datos (API)
+
         ajax: {
             url: "/Orders/AdminOrder/GetAll"
         },
-        // 2. Definición de Columnas
+
         columns: [
-            { data: "id" },             // ID de la orden
-            { data: "userId" },         // ID del usuario (o cliente)
-            { data: "description" },    // Descripción general de la orden
-            { data: "totalAmount" },    // Monto total
-            { data: "date" },           // Fecha y hora
-            { data: "state" },          // Estado de la orden
+            { data: "id" },             
+            { data: "userId" },       
+            { data: "description" },    
+            { data: "totalAmount" },   
+            { data: "date" },           
+            { data: "state" },          
         ],
-        // Ocultamos las columnas para usar el renderizado personalizado (tarjeta)
+        
         columnDefs: [{
             targets: "_all",
             visible: false
         }],
-        // 3. Renderizado de Fila Personalizado (Tarjeta de Orden)
+        
         createdRow: function (row, data) {
-            // Formatear la fecha
+            
             const formattedDate = new Date(data.date).toLocaleDateString('es-CR', {
                 year: 'numeric',
                 month: 'long',
@@ -39,7 +39,7 @@ function loadDataTable() {
                 minute: '2-digit'
             });
 
-            // Usamos un color/clase de estado simple (puedes personalizar las clases CSS)
+            
             const stateClass = data.state.toLowerCase().replace(/\s/g, '-');
 
             $(row).html(`
@@ -71,7 +71,7 @@ function loadDataTable() {
     });
 }
 
-// 4. Función de Eliminación Actualizada
+
 function DeleteOrder(_id) {
     Swal.fire({
         title: "¿Estás seguro?",
@@ -85,7 +85,7 @@ function DeleteOrder(_id) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                // URL de la función de borrado en el controlador de Órdenes
+                
                 url: "/Orders/AdminOrder/Delete/" + _id,
                 type: "DELETE",
                 success: function (data) {
