@@ -1,41 +1,44 @@
 ﻿var customerDataTable;
+// Definition of possible states for the dropdown (adjust according to your model)
+const possibleStates = [
+    "Pendiente",
+    "En Proceso",
+    "Enviado",
+    "Completado",
+    "Cancelado"
+];
 
-// Función que se ejecuta cuando el documento HTML está completamente cargado.
+// Function that executes when the HTML document is fully loaded.
 $(document).ready(function () {
-    // 1. Inicializa y carga la tabla de pedidos.
+    // 1. Initialize and load the orders table.
     loadCustomerDataTable();
 
-    // 2. Configura la recarga automática de la tabla cada 30 segundos 
-    //    para obtener el estado más reciente de los pedidos.
+    // 2. Configure automatic table reload every 30 seconds
     setInterval(function () {
         if (customerDataTable) {
-            // Recarga los datos sin cambiar la paginación actual (false)
+            // Reloads data without changing current pagination (false)
             customerDataTable.ajax.reload(null, false);
         }
     }, 30000);
 });
 
-// Función principal para inicializar y configurar DataTables.
+// Main function to initialize and configure DataTables.
 function loadCustomerDataTable() {
-    // Inicializa DataTables, apuntando al elemento con id="tblOrders"
     customerDataTable = $('#tblOrders').DataTable({
-
-        // 1. Configuración del Origen de Datos (API)
+        // 1. Data Source Configuration (API)
         "ajax": {
-            // URL del controlador de pedidos para el usuario final (no el de Admin)
             "url": "/Orders/Order/GetAll",
             "type": "GET",
             "datatype": "json"
         },
 
-        // 2. Definición y Renderización de las Columnas
+        // 2. Column Definition and Rendering
         "columns": [
-            // Columna 1: Número de Pedido (ID)
+            // Column 1: Order Number (ID)
             {
                 "data": "id",
                 "width": "15%",
                 "render": function (data) {
-                    // Formatea el ID con relleno de ceros (ej: ORD-0001)
                     const formattedId = data.toString().padStart(4, '0');
                     return `
                         <span class="order-id" data-label="Pedido">
@@ -45,57 +48,59 @@ function loadCustomerDataTable() {
                     `;
                 }
             },
-            // Columna 2: Descripción del Pedido
+            // Column 2: Order Description
             {
                 "data": "description",
                 "width": "30%",
                 "render": function (data) {
-                    // Limita la longitud para que la tabla sea legible
                     return data.length > 60 ? data.substring(0, 60) + '...' : data;
                 }
             },
-            // Columna 3: Monto Total
+            // Column 3: Total Amount
             {
                 "data": "totalAmount",
                 "width": "15%",
                 "render": function (data) {
-                    // Formato de moneda costarricense (₡) con separador de miles
-                    // toFixed(2) asegura dos decimales y se reemplaza el punto por coma si es necesario
                     const total = parseFloat(data).toFixed(2);
                     return `<span class="order-price" data-label="Total">₡${total.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</span>`;
                 }
             },
-            // Columna 4: Fecha del Pedido
+            // Column 4: Order Date
             {
                 "data": "date",
                 "width": "15%",
                 "render": function (data) {
-                    // Formato de fecha localizado (Día, Mes, Año)
                     const date = new Date(data);
                     const options = { year: 'numeric', month: 'long', day: 'numeric' };
                     return date.toLocaleDateString('es-CR', options);
                 }
             },
-            // Columna 5: Estado del Pedido
+            // Column 5: ORDER STATE (MODIFIED TO DROPDOWN)
             {
                 "data": "state",
                 "width": "15%",
-                "render": function (data) {
-                    // Crea una clase CSS a partir del estado (ej: "En Camino" -> "en-camino")
-                    const statusClass = data.toLowerCase().replace(/\s/g, '-');
-                    return `
-                        <span class="status-tag ${statusClass}" data-label="Estado">
-                            ${data}
-                        </span>
-                    `;
+                "render": function (data, type, row) {
+                    const orderId = row.id;
+
+                    // Build the dropdown menu
+                    let selectHtml = `<select class="form-select status-dropdown" data-order-id="${orderId}">`;
+
+                    possibleStates.forEach(state => {
+                        const selected = (state === data) ? 'selected' : '';
+                        const statusClass = state.toLowerCase().replace(/\s/g, '-');
+
+                        selectHtml += `<option value="${state}" class="${statusClass}" ${selected}>${state}</option>`;
+                    });
+
+                    selectHtml += `</select>`;
+                    return selectHtml;
                 }
             },
-            // Columna 6: Acciones (Botón/Enlace a Detalles)
+            // Column 6: Actions (Details Link)
             {
                 "data": "id",
                 "width": "10%",
                 "render": function (data) {
-                    // Enlace a la vista de detalles del pedido
                     return `
                         <a href="/Orders/Order/Details?id=${data}" class="details-link">
                             Ver detalles <i class="fa-solid fa-angle-right"></i>
@@ -105,15 +110,116 @@ function loadCustomerDataTable() {
             }
         ],
 
-        // 3. Configuraciones Generales de DataTables
+        // 3. DataTables General Configuration
         "language": {
-            // Carga la traducción al español de la interfaz de DataTables
             "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
         },
-        "responsive": true, // Habilita la funcionalidad responsiva
-        "searching": false, // Oculta la barra de búsqueda para esta vista
-        "order": [[3, "desc"]], // Ordena por defecto por la columna de Fecha (índice 3) de forma descendente
-        "lengthMenu": [10, 25, 50], // Opciones de paginación
-        "pageLength": 10 // Número de filas por defecto
+        "responsive": true,
+        "searching": false,
+        "order": [[3, "desc"]],
+        "lengthMenu": [10, 25, 50],
+        "pageLength": 10,
+
+        // 4. Initialization complete to add Event Listener
+        "initComplete": function (settings, json) {
+            $('#tblOrders').on('change', '.status-dropdown', function () {
+                const orderId = $(this).data('order-id');
+                const newStatus = $(this).val();
+
+                // Llamamos al manejador de SweetAlert
+                handleStatusChange(orderId, newStatus, this);
+            });
+        }
     });
+}
+
+// ====================================================================
+// FUNCIÓN PARA MANEJAR EL CAMBIO Y LA CONFIRMACIÓN CON SWEETALERT
+// ====================================================================
+
+function handleStatusChange(orderId, newStatus, dropdownElement) {
+    // Almacenamos el estado actual como "previo" antes de la confirmación
+    const previousStatus = $(dropdownElement).find('option:selected').text();
+    $(dropdownElement).data('previous-status', previousStatus);
+
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: `¿Deseas cambiar el estado a "${newStatus}"? ¡Esta acción no es fácilmente reversible!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, ¡actualizar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, procedemos con la actualización
+            updateOrderStatus(orderId, newStatus, dropdownElement);
+        } else {
+            // Si el usuario cancela, revertimos el dropdown visualmente
+            $(dropdownElement).val(previousStatus);
+        }
+    });
+}
+
+
+// ====================================================================
+// FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL PEDIDO EN EL BACKEND (AJAX)
+// ====================================================================
+
+function updateOrderStatus(orderId, newStatus, dropdownElement) {
+    // Guardamos el estado previo para el caso de error en el catch
+    const previousStatus = $(dropdownElement).data('previous-status');
+
+    // Disable dropdown while processing
+    $(dropdownElement).prop('disabled', true);
+
+    // API Call
+    fetch('/Orders/Order/UpdateStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            Id: orderId,
+            NewStatus: newStatus
+        })
+    })
+        .then(response => {
+            // Siempre intentamos parsear la respuesta como JSON
+            return response.json();
+        })
+        .then(data => {
+            $(dropdownElement).prop('disabled', false);
+
+            if (data.success === true) {
+                // Éxito: Usamos el modal de éxito de SweetAlert
+                Swal.fire(
+                    '¡Actualizado!',
+                    data.message,
+                    'success'
+                );
+            } else {
+                // Error de negocio
+                // Lanzamos el error con el mensaje del servidor para ser capturado en el catch
+                throw new Error(data.message);
+            }
+        })
+        .catch(error => {
+            // Error de red, error de parseo JSON o error de negocio
+            console.error('Fallo en la actualización:', error.message);
+
+            // Revertir y habilitar el dropdown
+            $(dropdownElement).val(previousStatus);
+            $(dropdownElement).prop('disabled', false);
+
+            // Mostrar el error usando SweetAlert
+            Swal.fire(
+                '¡Error!',
+                error.message.includes("Error:")
+                    ? error.message
+                    : `❌ Error inesperado: ${error.message}`,
+                'error'
+            );
+        });
 }
