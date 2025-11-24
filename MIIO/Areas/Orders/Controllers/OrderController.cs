@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MIIO.Data.Repository.Interfaces;
+using MIIO.Extensions;
 using MIIO.Models;
 
 namespace MIIO.Areas.Orders.Controllers
 {
     [Area("Orders")]
+    [Authorize]
+    //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +26,37 @@ namespace MIIO.Areas.Orders.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Create()
+        {
+            var cart = HttpContext.Session.GetObject<List<Product>>("Cart");
 
+            if (cart == null || !cart.Any())
+                return Json(new { success = false, message = "Carrito vacio" });
+
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Json(new { success = false, message = "Usuario no autenticado" });
+
+            var order = new Order
+            {
+                UserId = userId,
+                Description = string.Join(", ", cart.Select(x => x.Name)),
+                TotalAmount = cart.Sum(x => x.Price),
+                Date = DateTime.Now,
+                State = "Pendiente"
+            };
+
+            _unitOfWork.Order.Add(order);
+            _unitOfWork.Save();
+
+            HttpContext.Session.Remove("Cart");
+
+            TempData["success"] = "Pedido creado correctamente";
+
+            return Json(new { success = true, orderId = order.Id });
+        }
         public IActionResult Details(int? id)
         {
             if (id == null || id == 0)

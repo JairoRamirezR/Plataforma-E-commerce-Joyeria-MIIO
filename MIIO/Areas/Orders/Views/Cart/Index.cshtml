@@ -1,0 +1,250 @@
+﻿@model List<MIIO.Models.Product>
+
+<style>
+    .cart-page-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 40px 20px;
+        font-family: Arial;
+    }
+
+    .cart-main-content {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .cart-items-panel {
+        flex: 2;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .cart-item-count {
+        font-size: 16px;
+        color: gray;
+    }
+
+    .cart-shipping-info {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .cart-product-card {
+        display: grid;
+        grid-template-columns: 100px 1fr auto auto;
+        gap: 20px;
+        padding: 20px 0;
+        align-items: center;
+    }
+
+    .cart-product-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .cart-product-title {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .cart-product-desc {
+        font-size: 14px;
+        color: gray;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .quantity-control button {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #aaa;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 0;
+            border-radius: 5px;
+        }
+
+        .quantity-control input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+    .remove-link {
+        color: red;
+        font-size: 14px;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-left: 10px;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .cart-product-price {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* RESUMEN DE COMPRA */
+    .order-summary-panel {
+        flex: 1;
+        padding: 20px;
+        background: #fafafa;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .summary-title {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .summary-total {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .summary-terms {
+        font-size: 14px;
+        color: gray;
+        margin-top: 20px;
+    }
+
+    .dark-button {
+        margin-top: 15px;
+        width: 100%;
+        background: black;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+</style>
+
+
+<div class="cart-page-container">
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            Tu carrito está vacío.
+        </div>
+    }
+    else
+    {
+        <div class="cart-main-content">
+
+            <!-- PANEL IZQUIERDO -->
+            <div class="cart-items-panel">
+
+                <div class="cart-header">
+                    <h1 class="cart-title">CARRITO DE COMPRAS</h1>
+                    <p class="cart-item-count">@Model.Count artículos</p>
+                </div>
+
+                <hr />
+                <p class="cart-shipping-info">Envío</p>
+
+                @foreach (var item in Model)
+                {
+                    <div class="cart-product-card">
+
+                        <img src="@item.Image" class="cart-product-image" />
+
+                        <div class="cart-product-details">
+                            <h2 class="cart-product-title">@item.Name</h2>
+                            <p class="cart-product-desc">@item.Category - @item.Material</p>
+                        </div>
+
+                        <div class="quantity-control-and-delete">
+                            
+                            <a onclick="removeFromCart(@item.Id)" class="remove-link">Eliminar</a>
+                        </div>
+
+                        <p class="cart-product-price">₡@item.Price</p>
+
+                    </div>
+
+                    <hr />
+                }
+
+            </div>
+
+            <!-- PANEL DERECHO -->
+            <div class="order-summary-panel">
+                <h3 class="summary-title">RESUMEN DEL PEDIDO</h3>
+
+                @{
+                    decimal subtotal = Model.Sum(x => x.Price);
+                }
+
+                <div class="summary-line">
+                    <span class="label">Artículos</span>
+                    <span class="value">₡@subtotal</span>
+                </div>
+
+                <div class="summary-line">
+                    <span class="label">Envío</span>
+                    <span class="value">₡0</span>
+                </div>
+
+                <div class="summary-line">
+                    <span class="label">Impuesto Estimado</span>
+                    <a href="#" class="summary-shipping-calc">Calculado al pagar</a>
+                </div>
+
+                <div class="summary-total summary-line">
+                    <span class="label">Total</span>
+                    <span class="value">₡@subtotal</span>
+                </div>
+
+                <p class="summary-terms">
+                    Al completar tu compra aceptas nuestros
+                    <a href="#">Términos y Condiciones</a>.
+                </p>
+
+                <button onclick="processPayment()" class="checkout-button dark-button">
+                    Proceder al Pago
+                </button>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<script src="~/js/cart.js"></script>

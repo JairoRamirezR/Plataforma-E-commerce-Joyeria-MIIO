@@ -73,7 +73,7 @@
                 <input type="text" name="query" placeholder="Buscar joyas..." class="search-input" />
             </form>
 
-            <a asp-page="/Carrito" class="cart-button">
+            <a asp-area="Orders" asp-controller="Cart" asp-action="Index" class="cart-button">
                 <span class="fa-solid fa-cart-shopping" style="margin-right: 5px;"></span>
                 Carrito
             </a>
