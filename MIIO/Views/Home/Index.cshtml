@@ -4,13 +4,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@* ⭐ INICIO DE LA MODIFICACIÓN: Enlaces de Administración ⭐ *@
-<div class="admin-links text-right mb-4" style="padding-top: 20px;">
-    <a asp-area="Products" asp-controller="AdminProduct" asp-action="Create" class="btn btn-primary" style="background-color: #333; border-color: #333;">➕ Crear Producto</a>
-    <a asp-area="Products" asp-controller="AdminProduct" asp-action="Edit" asp-route-id="1" class="btn btn-secondary" style="background-color: #6c757d; border-color: #6c757d;">✏️ Editar Producto (Ejemplo ID 1)</a>
-</div>
-@* ⭐ FIN DE LA MODIFICACIÓN ⭐ *@
-
 
 <div class="text-center">
     @* Este div contiene el logo, barra de búsqueda y navegación. Se asume que estos están en el _Layout.cshtml o en la parte superior del archivo. *@
@@ -19,38 +12,42 @@
         <h3>IMAGEN</h3>
         <p>Espacio destinado para una imagen que cuente la historia de Miio, resaltando la elegancia y calidad de nuestras piezas de plata</p>
     </div>
+    @if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
+    {
+        <div class="product-gallery-container mt-4 mb-5">
+            <h2 class="text-center">Nuestros Productos Destacados</h2>
+    
 
-    <div class="product-gallery-container mt-4 mb-5">
-        <h2 class="text-center">Nuestros Productos Destacados</h2>
-
-        @if (!Model.Any())
-        {
-            <div class="alert alert-warning text-center" role="alert">
-                No se encontraron productos que coincidan con su búsqueda.
-            </div>
-        }
-
-        <div class="row">
-            @foreach (var product in Model)
+            @if (!Model.Any())
             {
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-                    <div class="card h-100">
-                        <img src=@product.Image class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">@product.Name</h5>
-                            <p class="card-text text-muted">@product.Description</p>
-                            <p class="card-text mt-auto">
-                                <strong>Precio:</strong>
-                                <span class="text-success">@product.Price.ToString("C")</span>
-                            </p>
-
-                            <a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary mt-2">Ver Detalle</a>
-                            @* ⭐ SEGUNDA MODIFICACIÓN: Botón de Editar en cada tarjeta (Opcional) ⭐ *@
-                            <a asp-area="Products" asp-controller="AdminProduct" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning mt-1">✏️ Editar</a>
-                        </div>
-                    </div>
+                <div class="alert alert-warning text-center" role="alert">
+                    No se encontraron productos que coincidan con su búsqueda.
                 </div>
             }
+            @if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
+            {
+                    <div class="row">
+                        @foreach (var product in Model)
+                        {
+                            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                                <div class="card h-100">
+                                    <img src=@product.Image class="card-img-top" alt="@product.Name" style="height: 150px; object-fit: cover;">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@product.Name</h5>
+                                        <p class="card-text text-muted">@product.Description</p>
+                                        <p class="card-text mt-auto">
+                                            <strong>Precio:</strong>
+                                            <span class="text-success">@product.Price.ToString("C")</span>
+                                        </p>
+
+                                        <a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary mt-2">Ver Detalle</a>
+                                
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+            }
         </div>
-    </div>
+    }
 </div>
