@@ -6,7 +6,7 @@ using MIIO.Models;
 namespace MIIO.Areas.Products.Controllers
 {
     [Area("Products")]
-    //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
+    [Authorize(Roles = Utilities.StaticValues.Role_Admin)]
     public class AdminProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

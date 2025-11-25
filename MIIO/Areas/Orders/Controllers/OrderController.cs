@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MIIO.Data.Repository.Interfaces;
 using MIIO.Extensions;
 using MIIO.Models;
+using MIIO.Utilities;
 
 namespace MIIO.Areas.Orders.Controllers
 {
@@ -99,24 +100,45 @@ namespace MIIO.Areas.Orders.Controllers
             if (userId == null)
                 return Json(new { success = false, message = "Usuario no autenticado" }); //temp data
 
-            foreach (var order in orderList)
+            if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
             {
-                var user = await _userManager.FindByIdAsync(order.UserId);
-                if (userId == order.UserId)
+                foreach (var order in orderList)
                 {
-                    result.Add(new
+                    var user = await _userManager.FindByIdAsync(order.UserId);
+                    if (userId == order.UserId)
                     {
-                        order.Id,
-                        order.UserId,
-                        order.Description,
-                        order.TotalAmount,
-                        order.Date,
-                        order.State,
-                        UserName = user?.UserName ?? "Desconocido"
-                    });
+                        result.Add(new
+                        {
+                            order.Id,
+                            order.UserId,
+                            order.Description,
+                            order.TotalAmount,
+                            order.Date,
+                            order.State,
+                            UserName = user?.UserName ?? "Desconocido"
+                        });
+                    }
                 }
             }
-            return Json(new { data = result });
+            else 
+            {
+                foreach (var order in orderList)
+                {
+                    var user = await _userManager.FindByIdAsync(order.UserId);
+                        result.Add(new
+                        {
+                            order.Id,
+                            order.UserId,
+                            order.Description,
+                            order.TotalAmount,
+                            order.Date,
+                            order.State,
+                            UserName = user?.UserName ?? "Desconocido"
+                        });
+                }
+            }
+
+                return Json(new { data = result });
 
         }
 
@@ -167,7 +189,6 @@ namespace MIIO.Areas.Orders.Controllers
             public int Id { get; set; }
             public string NewStatus { get; set; } // Nombre en inglés
         }
-
         #endregion
     }
 }
