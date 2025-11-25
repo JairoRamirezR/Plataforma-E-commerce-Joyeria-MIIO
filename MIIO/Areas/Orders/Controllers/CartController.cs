@@ -28,7 +28,10 @@ namespace MIIO.Areas.Orders.Controllers
             {
                 return Json(new { success = false });
             }
-
+            if (product.Offer == true)
+            {
+                product.Price = Convert.ToInt32(product.Price * 0.9);
+            }
             List<Product> cart = HttpContext.Session.GetObject<List<Product>>("Cart") ?? new List<Product>();
             cart.Add(product);
             HttpContext.Session.SetObject("Cart", cart);

@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Home Page";
 	var featuredProducts = ViewData["FeaturedProducts"] as List<MIIO.Models.Product>;
 
-	
+
 	var brandColor = "#FFD700"; 
 	var textColor = "#000000"; 
 	var logoGray = "#808080"; 
@@ -65,7 +65,7 @@
 				}
 			</div>
 
-			
+
 			<button class="carousel-control-prev" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="prev">
 				<span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
 				<span class="visually-hidden">Anterior</span>
@@ -99,7 +99,7 @@
 		<div id="allProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
 			<div class="carousel-inner pb-5">
 				@{
-					
+
 					int totalItems = Model.Count();
 					int itemsPerSlide = 4;
 					int slideCount = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
@@ -123,7 +123,13 @@
 											<p class="card-text" style="color: @textColor;">@product.Description</p>
 											<p class="card-text mt-auto" style="color: @textColor;">
 												<strong>Precio:</strong>
-												<span style="color: @textColor;">@("₡" + (product.Price).ToString("F0"))</span>
+												@if (product.Offer == true)
+												{
+													<span style="color: @textColor;">@("₡" + (product.Price * 0.9m).ToString("F0"))</span>
+												} else
+												{
+													<span style="color: @textColor;">@("₡" + (product.Price).ToString("F0"))</span>
+												}
 											</p>
 
 											<a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn mt-2" style="background-color: @logoGray; border-color: @logoGray; color: @whiteCardBg;">Ver Detalle</a>

@@ -33,6 +33,10 @@ namespace MIIO.Areas.Products.Controllers
             {
                 return NotFound();
             }
+            if (productFromDb.Offer == true)
+            {
+                productFromDb.Price = Convert.ToInt32(productFromDb.Price * 0.9);
+            }
             return View(productFromDb);
         }
         #region API
