@@ -1,6 +1,4 @@
 ﻿var customerDataTable;
-// La variable 'isAdmin' debe estar definida en la vista antes de cargar este script.
-
 const possibleStates = [
     "Pendiente",
     "En Proceso",
@@ -9,11 +7,9 @@ const possibleStates = [
     "Cancelado"
 ];
 
-// Function that executes when the HTML document is fully loaded.
 $(document).ready(function () {
     loadCustomerDataTable();
 
-    // 2. Configure automatic table reload every 30 seconds (aplica para todos)
     setInterval(function () {
         if (customerDataTable) {
             customerDataTable.ajax.reload(null, false);
@@ -21,7 +17,6 @@ $(document).ready(function () {
     }, 30000);
 });
 
-// Main function to initialize and configure DataTables.
 function loadCustomerDataTable() {
     customerDataTable = $('#tblOrders').DataTable({
         "ajax": {
@@ -30,7 +25,6 @@ function loadCustomerDataTable() {
             "datatype": "json"
         },
         "columns": [
-            // Column 1: Order Number (ID)
             {
                 "data": "id",
                 "width": "15%",
@@ -44,7 +38,6 @@ function loadCustomerDataTable() {
                     `;
                 }
             },
-            // Column 2: Order Description
             {
                 "data": "description",
                 "width": "30%",
@@ -52,7 +45,6 @@ function loadCustomerDataTable() {
                     return data.length > 60 ? data.substring(0, 60) + '...' : data;
                 }
             },
-            // Column 3: Total Amount
             {
                 "data": "totalAmount",
                 "width": "15%",
@@ -61,7 +53,6 @@ function loadCustomerDataTable() {
                     return `<span class="order-price" data-label="Total">₡${total.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</span>`;
                 }
             },
-            // Column 4: Order Date
             {
                 "data": "date",
                 "width": "15%",
@@ -71,12 +62,10 @@ function loadCustomerDataTable() {
                     return date.toLocaleDateString('es-CR', options);
                 }
             },
-            // 🛑 Columna 5: ESTADO (APLICA LÓGICA DE ROL) 🛑
             {
                 "data": "state",
                 "width": "15%",
                 "render": function (data, type, row) {
-                    // Si el usuario es administrador, muestra el dropdown
                     if (isAdmin) {
                         const orderId = row.id;
                         let selectHtml = `<select class="form-select status-dropdown" data-order-id="${orderId}">`;
@@ -90,13 +79,11 @@ function loadCustomerDataTable() {
                         selectHtml += `</select>`;
                         return selectHtml;
                     }
-                    // Si NO es administrador (cliente), muestra solo el texto
                     else {
                         return `<span class="order-state-text">${data}</span>`;
                     }
                 }
             },
-            // Column 6: Actions (Details Link)
             {
                 "data": "id",
                 "width": "10%",
@@ -109,7 +96,6 @@ function loadCustomerDataTable() {
                 }
             }
         ],
-        // ... (configuraciones generales) ...
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
         },
@@ -119,15 +105,12 @@ function loadCustomerDataTable() {
         "lengthMenu": [10, 25, 50],
         "pageLength": 10,
 
-        // 4. Initialization complete to add Event Listener
         "initComplete": function (settings, json) {
-            // El listener SOLO se añade si es administrador
             if (isAdmin) {
                 $('#tblOrders').on('change', '.status-dropdown', function () {
                     const orderId = $(this).data('order-id');
                     const newStatus = $(this).val();
 
-                    // Llamamos al manejador de SweetAlert
                     handleStatusChange(orderId, newStatus, this);
                 });
             }
@@ -135,15 +118,8 @@ function loadCustomerDataTable() {
     });
 }
 
-// ====================================================================
-// FUNCIÓN PARA MANEJAR EL CAMBIO Y LA CONFIRMACIÓN (SOLO ADMIN)
-// ====================================================================
-// Estas funciones SOLO se necesitan si isAdmin es true. 
-// Las definimos fuera de loadCustomerDataTable para evitar redefiniciones.
-
 if (isAdmin) {
     function handleStatusChange(orderId, newStatus, dropdownElement) {
-        // Almacenamos el estado actual como "previo" antes de la confirmación
         const previousStatus = $(dropdownElement).find('option:selected').text();
         $(dropdownElement).data('previous-status', previousStatus);
 
@@ -164,17 +140,12 @@ if (isAdmin) {
             }
         });
     }
-
-    // ====================================================================
-    // FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL PEDIDO EN EL BACKEND (AJAX)
-    // ====================================================================
-
     function updateOrderStatus(orderId, newStatus, dropdownElement) {
         const previousStatus = $(dropdownElement).data('previous-status');
 
         $(dropdownElement).prop('disabled', true);
 
-        // API Call
+        
         fetch('/Orders/Order/UpdateStatus', {
             method: 'POST',
             headers: {
@@ -196,7 +167,6 @@ if (isAdmin) {
                     $(dropdownElement).val(newStatus);
                     $(dropdownElement).data('previous-status', newStatus);
 
-                    // Forzamos la recarga de DataTables para reflejar el cambio.
                     customerDataTable.ajax.reload(null, false);
 
                     Swal.fire(

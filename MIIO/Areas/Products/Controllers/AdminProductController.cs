@@ -83,22 +83,19 @@ namespace MIIO.Areas.Products.Controllers
             if (dbProduct == null)
                 return NotFound();
 
-            // 🟢 ACTUALIZAR CAMPOS
             dbProduct.Name = product.Name;
             dbProduct.Price = product.Price;
             dbProduct.Category = product.Category;
             dbProduct.Material = product.Material;
             dbProduct.Offer = product.Offer;
-            dbProduct.Description = product.Description; // El texto con formato HTML se guarda aquí
+            dbProduct.Description = product.Description; 
 
-            // 🟢 SI HAY IMAGEN SUBIDA
             if (ImageFile != null)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
                 string uploads = Path.Combine(wwwRootPath, @"images/products");
 
-                // eliminar la imagen anterior si no es la default
                 if (!string.IsNullOrEmpty(dbProduct.Image))
                 {
                     var oldImagePath = Path.Combine(wwwRootPath, dbProduct.Image.TrimStart('/'));
@@ -107,7 +104,6 @@ namespace MIIO.Areas.Products.Controllers
                         System.IO.File.Delete(oldImagePath);
                 }
 
-                // guardar la nueva
                 using (var stream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                 {
                     ImageFile.CopyTo(stream);
@@ -116,7 +112,6 @@ namespace MIIO.Areas.Products.Controllers
                 dbProduct.Image = "/images/products/" + fileName;
             }
 
-            // 🟢 ESTO ES SUFICIENTE. NO SE USA Update()
             _unitOfWork.Save();
 
             return RedirectToAction("Index");
@@ -137,7 +132,6 @@ namespace MIIO.Areas.Products.Controllers
                 return Json(new { success = false, message = "Error al Eliminar" });
             }
 
-            // Lógica para eliminar la imagen física si existe
             if (!string.IsNullOrEmpty(productToDelete.Image))
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;

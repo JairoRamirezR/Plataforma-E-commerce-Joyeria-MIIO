@@ -6,7 +6,6 @@
             if (data.success) {
                 toastr.success(data.message);
 
-                // Recargar el carrito si estás en esa página
                 location.reload();
             } else {
                 toastr.error(data.message);
@@ -42,7 +41,6 @@ function processPayment() {
             if (res.success) {
                 toastr.success("Orden generada correctamente");
 
-                // Redirigir 
                 setTimeout(() => {
                     window.location.href = "/Orders/Order/Details/" + res.orderId;
                 }, 1000);

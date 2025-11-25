@@ -5,8 +5,6 @@
 }
 
 <script>
-    // Se define la variable 'isAdmin' antes de cargar el script principal.
-    // Asume que MIIO.Utilities.StaticValues.Role_Admin es la constante del rol "Admin".
     var isAdmin = @(User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin) ? "true" : "false");
 </script>
 
@@ -33,7 +31,5 @@
 </div>
 
 @section Scripts {
-    <!-- Carga el script específico para el historial de cliente  -->
-    <!-- PURA IA EL ORDER HISTORY-->
     <script src="~/js/orderHistory.js" asp-append-version="true"></script>
 }

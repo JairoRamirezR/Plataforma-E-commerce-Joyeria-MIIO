@@ -2,14 +2,13 @@
 
 @{
 	ViewData["Title"] = "Home Page";
-	// Recuperar la lista de productos destacados desde ViewData
 	var featuredProducts = ViewData["FeaturedProducts"] as List<MIIO.Models.Product>;
 
-	// Estilos CSS Personalizados para el color de la marca
-	var brandColor = "#FFD700"; // Amarillo Oro
-	var textColor = "#000000"; // Negro
-	var logoGray = "#808080"; // Gris del texto del logo (usado para el botón)
-	var whiteCardBg = "#FFFFFF"; // Fondo blanco explícito para tarjetas
+	
+	var brandColor = "#FFD700"; 
+	var textColor = "#000000"; 
+	var logoGray = "#808080"; 
+	var whiteCardBg = "#FFFFFF"; 
 }
 
 <div class="text-center">
@@ -28,7 +27,6 @@
 		<div id="featuredProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
 			<div class="carousel-inner pb-5">
 				@{
-					// Lógica para agrupar los productos de 4 en 4
 					int totalFeaturedItems = featuredProducts.Count();
 					int itemsPerSlide = 4;
 					int featuredSlideCount = (int)Math.Ceiling((double)totalFeaturedItems / itemsPerSlide);
@@ -67,7 +65,7 @@
 				}
 			</div>
 
-			@* Controles de flecha (Anterior/Siguiente) para Destacados *@
+			
 			<button class="carousel-control-prev" type="button" data-bs-target="#featuredProductsCarousel" data-bs-slide="prev">
 				<span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
 				<span class="visually-hidden">Anterior</span>
@@ -101,7 +99,7 @@
 		<div id="allProductsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
 			<div class="carousel-inner pb-5">
 				@{
-					// Lógica para agrupar los productos de 4 en 4
+					
 					int totalItems = Model.Count();
 					int itemsPerSlide = 4;
 					int slideCount = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
@@ -138,7 +136,7 @@
 				}
 			</div>
 
-			@* Controles de flecha (Anterior/Siguiente) *@
+			
 			<button class="carousel-control-prev" type="button" data-bs-target="#allProductsCarousel" data-bs-slide="prev">
 				<span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
 				<span class="visually-hidden">Anterior</span>

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\User\Controllers\**" />
+    <Content Remove="Areas\User\Controllers\**" />
+    <EmbeddedResource Remove="Areas\User\Controllers\**" />
+    <None Remove="Areas\User\Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
@@ -21,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Orders\Views\Order\" />
-    <Folder Include="Areas\User\Controllers\" />
   </ItemGroup>
 
 </Project>

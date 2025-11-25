@@ -11,7 +11,6 @@ namespace MIIO.Areas.Orders.Controllers
 {
     [Area("Orders")]
     [Authorize]
-    //[Authorize(Roles = Utilities.StaticValues.Role_Admin)]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -98,7 +97,7 @@ namespace MIIO.Areas.Orders.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Json(new { success = false, message = "Usuario no autenticado" }); //temp data
+                return Json(new { success = false, message = "Usuario no autenticado" }); 
 
             if (!User.IsInRole(MIIO.Utilities.StaticValues.Role_Admin))
             {
@@ -142,52 +141,41 @@ namespace MIIO.Areas.Orders.Controllers
 
         }
 
-        // Método para actualizar el estado del pedido (Solo Admin)
         [HttpPost]
         [Authorize(Roles = Utilities.StaticValues.Role_Admin)]
         public IActionResult UpdateStatus([FromBody] UpdateStatusModel model)
         {
-            // 1. Input Validation
             if (model.Id <= 0 || string.IsNullOrEmpty(model.NewStatus))
             {
-                // Respuesta estandarizada para error de validación
                 return BadRequest(new { success = false, message = "Error: Datos de pedido incompletos o inválidos." });
             }
 
-            // 2. Find order in DB
             var orderFromDb = _unitOfWork.Order.Get(x => x.Id == model.Id);
 
             if (orderFromDb == null)
             {
-                // Respuesta estandarizada si no se encuentra
                 return NotFound(new { success = false, message = $"Error: Pedido con ID {model.Id} no encontrado." });
             }
 
-            // 3. Update Logic
             try
             {
-                // 3.1. Assign the new state
                 orderFromDb.State = model.NewStatus;
 
-                // 3.2. Save changes to the DB
                 _unitOfWork.Order.Update(orderFromDb);
                 _unitOfWork.Save();
 
-                // 4. Success Response (Estandarizado)
                 return Ok(new { success = true, message = "Estado del Pedido actualizado correctamente." });
             }
             catch (Exception)
             {
-                // 5. Error Handling (Estandarizado)
                 return StatusCode(500, new { success = false, message = "Error interno del servidor al actualizar el estado." });
             }
         }
 
-        // Internal model to receive data from the AJAX request
         public class UpdateStatusModel
         {
             public int Id { get; set; }
-            public string NewStatus { get; set; } // Nombre en inglés
+            public string NewStatus { get; set; } 
         }
         #endregion
     }

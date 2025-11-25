@@ -1,36 +1,30 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MIIO.Data.Repository.Interfaces; // Asegúrate de agregar este using
+using MIIO.Data.Repository.Interfaces; 
 using MIIO.Models;
-using System.Linq; // Necesario para usar .Where() y .ToList()
+using System.Linq; 
 
 namespace MIIO.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUnitOfWork _unitOfWork; // Declarar la interfaz para acceso a datos
+        private readonly IUnitOfWork _unitOfWork; 
 
-        // Constructor modificado para inyectar IUnitOfWork
         public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork; // Asignar la inyección
+            _unitOfWork = unitOfWork; 
         }
 
         public IActionResult Index()
         {
-            // Obtener TODOS los productos (para la sección "Todos los productos")
             var allProducts = _unitOfWork.Product.GetAll();
 
-            // Obtener los productos con oferta (para la sección "Destacados")
-            // Filtramos los productos donde la propiedad Offer es verdadera.
             var featuredProducts = allProducts.Where(p => p.Offer == true).ToList();
 
-            // Pasar los productos destacados a la vista usando ViewData
             ViewData["FeaturedProducts"] = featuredProducts;
 
-            // Pasar TODOS los productos como el modelo principal de la vista
             return View(allProducts);
         }
 

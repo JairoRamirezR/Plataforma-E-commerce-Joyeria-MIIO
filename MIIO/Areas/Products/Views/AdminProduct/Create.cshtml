@@ -11,7 +11,6 @@
 
         <form asp-action="Create" method="post" enctype="multipart/form-data">
 
-            @* Sección: Información Básica (Sin Cambios) *@
             <div class="card basic-info">
                 <h2 class="card-title">Información Básica</h2>
 
@@ -35,7 +34,6 @@
                 </div>
             </div>
 
-            @* Sección: Detalles del Producto (Editor de Texto Enriquecido) *@
             <div class="card product-details">
                 <h2 class="card-title">Detalles del Producto</h2>
 
@@ -59,24 +57,19 @@
                 </div>
             </div>
 
-            @* Sección: Imágenes del Producto (Diseño Mejorado) *@
             <div class="card product-images">
                 <h2 class="card-title">Imágenes del Producto</h2>
 
                 <div class="image-upload-area">
-                    @* Campo de subida de archivos *@
                     <input type="file" name="file" class="d-none" id="file-upload-input" accept="image/*" />
 
-                    @* Contenedor para la imagen seleccionada y el botón de agregar *@
                     <div class="image-list-container">
 
-                        @* 💡 Caja que muestra la imagen seleccionada (inicialmente oculta) *@
                         <div id="selected-image-box" class="image-box" style="display: none;">
                             <span id="selected-image-filename" class="image-filename"></span>
                             <i id="remove-image-icon" class="fas fa-times-circle remove-icon"></i>
                         </div>
 
-                        @* 💡 Caja para agregar nueva imagen (siempre visible) *@
                         <div class="image-box upload-placeholder" onclick="document.getElementById('file-upload-input').click()" id="add-image-box">
                             <span class="upload-icon">↑</span>
                             <span>Agregar</span>
@@ -86,7 +79,6 @@
                 <p class="image-upload-note">La imagen seleccionada será la principal.</p>
             </div>
 
-            @* Botones de Acción *@
             <div class="action-buttons">
                 <a asp-action="Index" class="btn btn-cancel">Cancelar</a>
                 <button type="submit" class="btn btn-save">Crear Producto</button>
@@ -112,41 +104,33 @@
                     const fileName = fileInput.files[0].name;
                     fileNameSpan.textContent = fileName;
 
-                    // Mostrar la caja con el nombre y ocultar la caja de "Agregar"
                     selectedImageBox.style.display = 'flex';
                     addImageBox.style.display = 'none';
 
-                    // Opcional: Establecer un fondo o imagen de vista previa
-                    // Si deseas una vista previa real, necesitarías un objeto FileReader.
                     selectedImageBox.style.backgroundImage = `url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCINCiAgICAgICAgICAgICAgICAgICAgICAgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIgogICAgICAgICAgICAgICAgICAgICAgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZSI+PHBhdGggZD0iTTE1IDJINWMtMS4xIDAtMiAuOS0yIDJ2MTZjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY3em0tMyAxMi41bC0yLjUtMi41LTYuNSA2LjVoMTd6Ii8+PC9zdmc+)`;
                     selectedImageBox.style.backgroundRepeat = 'no-repeat';
                     selectedImageBox.style.backgroundPosition = 'center 20px';
                     selectedImageBox.style.backgroundSize = '40px 40px';
 
                 } else {
-                    // Limpiar y ocultar la caja de la imagen, mostrar la caja de "Agregar"
                     selectedImageBox.style.display = 'none';
                     addImageBox.style.display = 'flex';
                     fileNameSpan.textContent = '';
                 }
             }
 
-            // Evento al seleccionar un archivo
             fileInput.addEventListener('change', updateImageDisplay);
 
-            // Evento para remover la imagen seleccionada
             removeIcon.addEventListener('click', function(e) {
-                e.stopPropagation(); // Evita que abra el selector de archivos
-                fileInput.value = ''; // Limpia el input de archivo
-                updateImageDisplay(); // Actualiza la vista
+                e.stopPropagation(); 
+                fileInput.value = ''; 
+                updateImageDisplay(); 
             });
 
-            // Inicializar la vista (útil si hay un producto existente que ya tiene una imagen)
             updateImageDisplay();
         });
     </script>
 
-    @* --- Estilos temporales para que se vea el diseño de la caja --- *@
     <style>
         .image-list-container {
             display: flex;
@@ -165,7 +149,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative; /* Para el icono de remover */
+            position: relative; 
             box-sizing: border-box;
             background-color: #f9f9f9;
             text-align: center;
@@ -190,7 +174,7 @@
             font-size: 12px;
             word-break: break-all;
             color: #333;
-            margin-top: 50px; /* Separación del icono SVG */
+            margin-top: 50px; 
         }
 
         .remove-icon {

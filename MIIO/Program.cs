@@ -44,12 +44,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
-// Primero rutas de Áreas
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-// Luego ruta por defecto
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

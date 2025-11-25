@@ -10,13 +10,10 @@
         <p class="page-subtitle">Actualiza la información del producto</p>
 
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
-            @* Campo oculto para el ID del producto *@
             <input type="hidden" asp-for="Id" />
 
-            @* Se asume que Image también se maneja como un campo oculto para mantener la referencia *@
             <input type="hidden" asp-for="Image" />
 
-            @* Sección: Información Básica *@
             <div class="card basic-info">
                 <h2 class="card-title">Información Básica</h2>
 
@@ -26,22 +23,13 @@
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
-                @*<div class="form-group">
-                    <label asp-for="Description">Descripción Breve</label>
-                    @* Usamos Description para la Descripción Breve como en la interfaz 
-                    <input asp-for="Description" placeholder="Descripción breve del producto" class="input-full" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>*@
-
                 <div class="form-row">
                     <div class="form-group-half">
                         <label asp-for="Price">Precio (CRC)</label>
-                        @* Usamos type="number" para el precio y forzamos el formato si es necesario *@
                         <input asp-for="Price" type="number" class="input-half" />
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                     <div class="form-group-half">
-                        @* Se asume que la interfaz de SKU será reemplazada por CATEOGRY si es necesario mapear dos campos aquí. De lo contrario, usamos un espacio en blanco o otro campo. Aquí usamos Category y Material para coincidir con la cuadrícula de detalles de la interfaz original. *@
                         <label asp-for="Category">Categoría</label>
                         <input asp-for="Category" class="input-half" />
                         <span asp-validation-for="Category" class="text-danger"></span>
@@ -49,7 +37,6 @@
                 </div>
             </div>
 
-            @* Sección: Detalles del Producto *@
             <div class="card product-details">
                 <h2 class="card-title">Detalles del Producto</h2>
 
@@ -68,12 +55,10 @@
 
                 <div class="form-group full-description-group">
                     <label>Descripción Completa</label>
-                    @* Mantenemos el campo de Descripción Completa como una TextArea para replicar la interfaz, aunque el valor se guardará en Description (o se requerirá un campo adicional en el modelo para una descripción larga) *@
                     <textarea asp-for="Description" class="full-description-textarea"></textarea>
                 </div>
             </div>
 
-            @* Sección: Imágenes del Producto *@
             <div class="card product-images">
                 <h2 class="card-title">Imágenes del Producto</h2>
                 <div class="image-upload-area">
@@ -83,13 +68,12 @@
                         <span class="upload-icon">↑</span>
                         <span>Agregar</span>
                     </div>
-                    @* Simulación de imagen actual *@
+
                     <div class="image-box">IMAGEN ACTUAL: @Model.Image</div>
                 </div>
                 <p class="image-upload-note">Puedes agregar hasta 5 imágenes. La primera imagen será la principal.</p>
             </div>
 
-            @* Botones de Acción *@
             <div class="action-buttons">
                 <a asp-action="Index" class="btn btn-cancel">Cancelar</a>
                 <button type="submit" class="btn btn-save">Guardar Cambios</button>
