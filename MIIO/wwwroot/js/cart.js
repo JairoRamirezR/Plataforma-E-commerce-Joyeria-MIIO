@@ -50,7 +50,7 @@ function processPayment() {
             }
         },
         error: function () {
-            toastr.error("Error al procesar el pago");
+            toastr.error("Error al procesar el pago/ Asegurese que ya inició sesión");
         }
     });
 }
