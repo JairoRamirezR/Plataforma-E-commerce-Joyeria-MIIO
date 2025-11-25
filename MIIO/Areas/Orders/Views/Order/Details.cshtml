@@ -1,33 +1,56 @@
-﻿<partial name="_Notifications" />
+﻿@model MIIO.Models.Order
+@* El modelo de la vista es solo el objeto Order. *@
 
 @{
-    ViewData["Title"] = "Historial de Pedidos";
+    var customer = ViewData["Customer"] as MIIO.Models.ApplicationUser;
+
+    string customerName = customer != null ? $"{customer.Name} {customer.LastName}" : "Cliente Desconocido";
+    string customerEmail = customer?.Email ?? "N/A";
+    string shippingAddress = customer?.Address ?? "No Proporcionada";
 }
 
-<div class="order-history-container">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h4 class="text-primary">Detalles del Pedido #@Model.Id</h4>
+            <hr />
+        </div>
+    </div>
 
-    <h1 class="order-history-title">HISTORIAL DE PEDIDOS</h1>
-    <p class="order-history-subtitle">Revisa el estado y detalles de tus compras anteriores</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Datos del Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Estado:</strong> <span class="badge bg-primary">@Model.State</span></p>
+                    <p><strong>Fecha:</strong> @Model.Date.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Descripción:</strong> @Model.Description</p>
+                    <p><strong>Total:</strong> ₡@Model.TotalAmount.ToString("N0")</p>
+                </div>
+            </div>
+        </div>
 
-    <table class="order-table" id="tblOrders">
-        <thead>
-            <tr>
-                <th>Número de Pedido</th>
-                <th>Descripción</th>
-                <th>Total</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Detalles</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Cliente y Envío</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre del Cliente:</strong> @customerName</p>
+                    <p><strong>Email:</strong> @customerEmail</p>
+                    <hr />
+                    <h6>📍 Dirección de Envío</h6>
+                    <p>@shippingAddress</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row mt-4">
+        <div class="col-12 text-end">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
 </div>
-
-@section Scripts {
-    <!-- Carga el script específico para el historial de cliente  -->
-    <!-- PURA IA EL ORDER HISTORY-->
-    <script src="~/js/orderHistory.js" asp-append-version="true"></script>
-}

@@ -1,32 +1,33 @@
-﻿
-<partial name="_Notifications" />
+﻿<partial name="_Notifications" />
 
-<div class="container">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2>Lista de Órdenes (Pedidos)</h2>
-        </div>
+@{
+    ViewData["Title"] = "Historial de Pedidos";
+}
 
-        <div class="col-6 text-end">
-            <a asp-controller="AdminOrder" asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Nueva Orden
-            </a>
-        </div>
-    </div>
+<div class="order-history-container">
 
-    <table class="table table-striped table-bordered" id="tblData">
+    <h1 class="order-history-title">HISTORIAL DE PEDIDOS</h1>
+    <p class="order-history-subtitle">Revisa el estado y detalles de tus compras anteriores</p>
+
+    <table class="order-table" id="tblOrders">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>ID Usuario</th>
+                <th>Número de Pedido</th>
                 <th>Descripción</th>
-                <th>Monto Total</th>
+                <th>Total</th>
                 <th>Fecha</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                <th>Detalles</th>
             </tr>
         </thead>
+        <tbody>
+        </tbody>
     </table>
+
 </div>
 
-<script src="~/js/order.js"></script>
+@section Scripts {
+    <!-- Carga el script específico para el historial de cliente  -->
+    <!-- PURA IA EL ORDER HISTORY-->
+    <script src="~/js/order.js" asp-append-version="true"></script>
+}

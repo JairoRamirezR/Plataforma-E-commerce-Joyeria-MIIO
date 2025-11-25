@@ -57,26 +57,35 @@ namespace MIIO.Areas.Orders.Controllers
 
             return Json(new { success = true, orderId = order.Id });
         }
-        public IActionResult Details(int? id)
+
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
             Order orderFromDb = _unitOfWork.Order.Get(x => x.Id == id);
+
             if (orderFromDb == null)
             {
                 return NotFound();
             }
-            return View(orderFromDb);
+            ApplicationUser user = await _userManager.FindByIdAsync(orderFromDb.UserId);
+            if (user == null)
+            {
+
+                ViewData["Customer"] = new ApplicationUser { Name = "Cliente", LastName = "Desconocido", Address = "N/A" };
+            }
+            else
+            {
+                ViewData["Customer"] = user;
+            }
+
+            return View("Details", orderFromDb);
         }
 
         #region API
 
-        // Método para obtener todos los pedidos (usado por DataTables)
         public async Task<IActionResult> GetAll(DateTime? startDate, DateTime? endDate)
         {
             var orderList = await _unitOfWork.Order.GetAllAsync();
+            
             if (startDate.HasValue)
                 orderList = orderList.Where(o => o.Date >= startDate.Value).ToList();
 
@@ -85,19 +94,27 @@ namespace MIIO.Areas.Orders.Controllers
 
             var result = new List<object>();
 
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+                return Json(new { success = false, message = "Usuario no autenticado" }); //temp data
+
             foreach (var order in orderList)
             {
                 var user = await _userManager.FindByIdAsync(order.UserId);
-                result.Add(new
+                if (userId == order.UserId)
                 {
-                    order.Id,
-                    order.UserId,
-                    order.Description,
-                    order.TotalAmount,
-                    order.Date,
-                    order.State,
-                    UserName = user?.UserName ?? "Desconocido"
-                });
+                    result.Add(new
+                    {
+                        order.Id,
+                        order.UserId,
+                        order.Description,
+                        order.TotalAmount,
+                        order.Date,
+                        order.State,
+                        UserName = user?.UserName ?? "Desconocido"
+                    });
+                }
             }
             return Json(new { data = result });
 
