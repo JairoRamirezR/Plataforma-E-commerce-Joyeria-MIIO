@@ -50,9 +50,9 @@
 											<p class="card-text" style="color: @textColor;">@product.Description</p>
 											<p class="card-text mt-auto" style="color: @textColor;">
 												<strong>Precio:</strong>
-												<span class="text-secondary text-decoration-line-through me-2">Antes: @(product.Price * 1.2m)</span>
+												<span class="text-secondary text-decoration-line-through me-2">Antes: @("₡" + (product.Price).ToString("F0"))</span>
 												<span class="fw-bold">Ahora:</span>
-												<span class="fw-bold">@product.Price.ToString("C")</span>
+												<span class="fw-bold">@("₡" + (product.Price * 0.9m).ToString("F0"))</span>
 											</p>
 
 											<a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn mt-2" style="background-color: @brandColor; border-color: @brandColor; color: @textColor;">Ver Detalle</a>
@@ -123,7 +123,7 @@
 											<p class="card-text" style="color: @textColor;">@product.Description</p>
 											<p class="card-text mt-auto" style="color: @textColor;">
 												<strong>Precio:</strong>
-												<span style="color: @textColor;">@product.Price.ToString("C")</span>
+												<span style="color: @textColor;">@("₡" + (product.Price).ToString("F0"))</span>
 											</p>
 
 											<a asp-area="Products" asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn mt-2" style="background-color: @logoGray; border-color: @logoGray; color: @whiteCardBg;">Ver Detalle</a>
